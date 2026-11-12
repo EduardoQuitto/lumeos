@@ -69,7 +69,13 @@ fases:
         - {id: t9-2, desc: "settings: paginas sistema, tela, som", aceite: "3 paginas funcionais com toques e slider", status: feita, retry: 0}
         - {id: t9-3, desc: "settings: paginas rede, bt", aceite: "2 paginas de conectividade funcionais", status: feita, retry: 0}
         - {id: t9-4, desc: "settings: paginas personalizacao, apps, contas", aceite: "3 paginas finais funcionais", status: feita, retry: 0}}
-  - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield"}
+  - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield",
+     gate: {testes: ["settings-shield-smoke", "settings-firewall-smoke", "settings-sandbox-smoke", "settings-cofre-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t10-1, desc: "settings: pagina seguranca com checklist Shield (verity, lockdown, AppArmor, seccomp, nftables, TPM2)", aceite: "checklist com todos os itens do Shield", status: feita, retry: 0}
+        - {id: t10-2, desc: "settings: pagina firewall nftables default-deny entrada", aceite: "toggle firewall com regras default-deny", status: feita, retry: 0}
+        - {id: t10-3, desc: "settings: pagina inspetor sandbox", aceite: "inspecionar sandbox de apps e daemons", status: feita, retry: 0}
+        - {id: t10-4, desc: "settings: pagina launcher Cofre + aviso modo live", aceite: "launcher microVM descartavel + aviso modo live", status: feita, retry: 0}}
   - {id: 11, nome: terminal-cli,             peso: 3, aceite: "foot+starship+quake+command-not-found+CLI lume completa"}
   - {id: 12, nome: loja,                     peso: 4, aceite: "8 categorias + badges tier + fila + flatpak install/remove"}
   - {id: 13, nome: essenciais-pwa-mime,      peso: 3, aceite: "OOBE 1-clique instala pacote + PWAs + MIME defaults"}
