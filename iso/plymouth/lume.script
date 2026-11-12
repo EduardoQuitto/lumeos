@@ -1,0 +1,118 @@
+// Lume Plymouth theme script
+// Fundo tinta (#0E1116) + arcos orbitais do logo girando + progresso
+
+import "plymouth" as plymouth;
+
+var width = plymouth.get_width();
+var height = plymouth.get_height();
+var cx = width / 2;
+var cy = height / 2;
+
+// Cores da paleta Lume
+var cor_marca = plymouth.parse_color("#45C8F5");
+var cor_acento = plymouth.parse_color("#3E8EF7");
+var cor_tinta = plymouth.parse_color("#0E1116");
+
+// Fundo tinta
+var background = new plymouth.Rectangle();
+background.size = [width, height];
+background.color = cor_tinta;
+background.opacity = 1;
+background.z = -100;
+background.add();
+
+// Arcos orbitais (3 arcos do logo Lume)
+var arco1 = new plymouth.Path();
+arco1.add_arc(cx, cy, width * 0.35, 0, 360);
+arco1.color = cor_acento;
+arco1.line_width = 3;
+arco1.opacity = 0.15;
+arco1.z = 10;
+
+var arco2 = new plymouth.Path();
+arco2.add_arc(cx, cy, width * 0.48, 0, 360);
+arco2.color = plymouth.parse_color("#9D7BFA");
+arco2.line_width = 2;
+arco2.opacity = 0.10;
+arco2.z = 10;
+
+var arco3 = new plymouth.Path();
+arco3.add_arc(cx, cy, width * 0.58, 0, 360);
+arco3.color = plymouth.parse_color("#F65A8E");
+arco3.line_width = 1.5;
+arco3.opacity = 0.08;
+arco3.z = 10;
+
+arco1.add();
+arco2.add();
+arco3.add();
+
+// Símbolo Lume (L + pétala central)
+var logo = new plymouth.Path();
+logo.move_to(cx - 40, cy + 40);
+logo.line_to(cx - 40, cy - 40);
+logo.line_to(cx, cy - 40);
+logo.line_to(cx, cy);
+logo.line_to(cx + 40, cy);
+logo.line_to(cx + 40, cy + 40);
+logo.color = cor_acento;
+logo.line_width = 6;
+logo.z = 20;
+logo.add();
+
+// Círculo central (núcleo)
+var nucleo = new plymouth.Path();
+nucleo.add_arc(cx, cy, 10, 0, 360);
+nucleo.color = cor_tinta;
+nucleo.fill_color = cor_acento;
+nucleo.line_width = 2;
+nucleo.z = 30;
+nucleo.add();
+
+// Texto do produto
+var texto = new plymouth.Text();
+texto.text = "Lume OS";
+texto.color = plymouth.parse_color("#F7F9FC");
+texto.font = "Inter Tight Bold";
+texto.size = 32;
+texto.x = cx - 80;
+texto.y = cy + 80;
+texto.z = 40;
+texto.add();
+
+// Barra de progresso
+var progresso_fundo = new plymouth.Rectangle();
+progresso_fundo.size = [width * 0.6, 4];
+progresso_fundo.color = plymouth.parse_color("#1e293b");
+progresso_fundo.x = cx - width * 0.3;
+progresso_fundo.y = cy + 140;
+progresso_fundo.z = 50;
+progresso_fundo.add();
+
+var progresso_barra = new plymouth.Rectangle();
+progresso_barra.size = [0, 4];
+progresso_barra.color = cor_acento;
+progresso_barra.x = cx - width * 0.3;
+progresso_barra.y = cy + 140;
+progresso_barra.z = 51;
+progresso_barra.add();
+
+// Variáveis de animação
+var angulo = 0;
+var progresso = 0;
+
+function animar() {
+    angulo = (angulo + 3) % 360;
+    progresso = (progresso + 0.5) % 100;
+
+    arco1.rotation = angulo;
+    arco2.rotation = -angulo * 0.7;
+    arco3.rotation = angulo * 0.5;
+
+    progresso_barra.size = [width * 0.6 * (progresso / 100), 4];
+
+    plymouth.redraw();
+}
+
+plymouth.set_redraw_handler(animar);
+plymouth.set_interval_handler(animar, 16);

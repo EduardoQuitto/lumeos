@@ -1,0 +1,11 @@
+# Plymouth Lume — tema de boot com arcos orbitais
+# Executado durante o boot. Desenha fundo tinta, arcos orbitais girando
+# e barra de progresso. Texto em pt-BR / en-US conforme locale.
+
+[Plymouth Theme]
+Name=Lume
+Description=Tema de boot Lume OS com arcos orbitais e fundo tinta
+ModuleName=lume
+
+[theme]
+Directory=/usr/share/plymouth/themes/lume
