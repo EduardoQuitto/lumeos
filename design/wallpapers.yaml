@@ -1,21 +1,38 @@
 pack: lume-wallpapers
-defaults: {light: aurora-lume, dark: aurora-lume}
+defaults: {light: aurora-peaks, dark: aurora-peaks}
 regras:
   pareamento: automatico-por-tema
   licenca: verificar-por-arquivo   # próprio, CC0 ou comprovada; nunca Apple/Microsoft
   resolucao_minima: 3840x2160
   variantes: [light, dark]         # obrigatórias para cada id
 wallpapers:
-  - id: aurora-lume
-    nome: Aurora Lume
-    light: wallpapers/aurora-lume/light.png
-    dark: wallpapers/aurora-lume/dark.png
+  - id: aurora-peaks
+    nome: Aurora Peaks
+    light: wallpapers-gen/aurora-peaks/light/aurora-peaks_light.jpg
+    dark: wallpapers-gen/aurora-peaks/dark/aurora-peaks_dark.jpg
     origem: gerado-por-shader
     licenca: proprio
-  # ↓ preencher com a sua lista (um bloco por wallpaper, light+dark)
-  - id: <seu-id>
-    nome: <Nome>
-    light: wallpapers/<seu-id>/light.png
-    dark: wallpapers/<seu-id>/dark.png
-    origem: <gerado|foto|terceiro>
-    licenca: <proprio|CC0|comprovada>
+  - id: crystal-glow
+    nome: Crystal Glow
+    light: wallpapers-gen/crystal-glow/light/crystal-glow_light.jpg
+    dark: wallpapers-gen/crystal-glow/dark/crystal-glow_dark.jpg
+    origem: gerado-por-shader
+    licenca: proprio
+  - id: pastel-horizon
+    nome: Pastel Horizon
+    light: wallpapers-gen/pastel-horizon/light/pastel-horizon_light.jpg
+    dark: wallpapers-gen/pastel-horizon/dark/pastel-horizon_dark.jpg
+    origem: gerado-por-shader
+    licenca: proprio
+  - id: silk-flow
+    nome: Silk Flow
+    light: wallpapers-gen/silk-flow/light/silk-flow_light.jpg
+    dark: wallpapers-gen/silk-flow/dark/silk-flow_dark.jpg
+    origem: gerado-por-shader
+    licenca: proprio
+  - id: solar-tide
+    nome: Solar Tide
+    light: wallpapers-gen/solar-tide/light/solar-tide_light.jpg
+    dark: wallpapers-gen/solar-tide/dark/solar-tide_dark.jpg
+    origem: gerado-por-shader
+    licenca: proprio

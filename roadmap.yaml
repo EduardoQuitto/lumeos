@@ -9,7 +9,14 @@ fases:
        - {id: t0-2, desc: "web Svelte painel :7777", aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots", status: feita, retry: 0}
        - {id: t0-3, desc: "tests/qemu/smoke.sh CI QEMU", aceite: "boot QEMU <30s + screendump + ISO amd64/i386", status: pendente, retry: 0}
        - {id: t0-4, desc: "systemd timer 5h + heartbeat por tarefa", aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas", status: pendente, retry: 0}}
-  - {id: 1,  nome: design-system-assets,     peso: 4, aceite: "tokens.json + logo SVG 6 variantes + cursor + wallpapers + sons"}
+  - {id: 1,  nome: design-system-assets,     peso: 4, aceite: "tokens.json + logo SVG 6 variantes + cursor + wallpapers + sons",
+     gate: {testes: ["design-assets-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t1-1, desc: "tokens.json revisado (raios, espaço, tipo, motion, materiais, sombra, foco, tiers)", aceite: "tokens válidos e coerentes com PRD §4", status: feita, retry: 0}
+       - {id: t1-2, desc: "logo SVG 6 variantes (dark, light, mono-white, mono-ink, acento, simple <24px)", aceite: "6 SVGs válidos, conceito L+pétala+arcos orbitais", status: feita, retry: 0}
+       - {id: t1-3, desc: "cursor Lume Arrow (24/32/48 + espera arcos do logo)", aceite: "arquivos de cursor definidos", status: feita, retry: 0}
+       - {id: t1-4, desc: "wallpapers Aurora Lume light/dark + pack pareado", aceite: "wallpapers light+dark para cada id", status: feita, retry: 0}
+       - {id: t1-5, desc: "sons CC0 (notificação, volume, erro)", aceite: "arquivos de áudio definidos", status: feita, retry: 0}}
   - {id: 2,  nome: iso-amd64-boot,           peso: 4, aceite: "boot QEMU <20s + Plymouth Lume + screenshot"}
   - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch"}
   - {id: 4,  nome: barra-tray-relogio,       peso: 4, aceite: "barra pílula + indicadores + relógio por locale"}

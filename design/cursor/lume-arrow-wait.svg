@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Lume Arrow Espera - arcos do logo girando (frames de animação) -->
+  <defs>
+    <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="1.2s" repeatCount="indefinite" />
+  </defs>
+  <g transform="rotate(0 24 24)">
+    <circle cx="24" cy="24" r="20" fill="none" stroke="#3E8EF7" stroke-width="3" opacity="0.3" />
+    <circle cx="24" cy="24" r="14" fill="none" stroke="#45C8F5" stroke-width="4" stroke-dasharray="8 8" opacity="0.8" />
+    <path d="M 24 8 L 24 14 L 30 14 L 30 8 Z" fill="#3E8EF7" />
+    <circle cx="24" cy="24" r="4" fill="#0E1116" />
+  </g>
+</svg>

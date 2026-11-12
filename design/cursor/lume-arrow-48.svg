@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Lume Arrow 48px - ponta suave, cor acento #3E8EF7 -->
+  <path d="M 8 42 L 42 8 L 34 8 L 20 22 L 42 22 L 42 12 L 8 12 Z" fill="#3E8EF7" />
+  <circle cx="16" cy="24" r="4" fill="#0E1116" />
+</svg>
