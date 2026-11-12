@@ -5,8 +5,8 @@ fases:
   - {id: 0,  nome: fundacao-mission-control, peso: 4, aceite: "painel :7777 com heartbeat + CI QEMU verde + PRD.md gerado",
      gate: {testes: ["backend-smoke", "web-smoke", "qemu-smoke"], blockers: 0, signoff: pendente},
      tarefas:
-       - {id: t0-1, desc: "backend axum+SQLite+SSE :7777", aceite: "API /api/state, /api/events, /api/control, heartbeat funcionando", status: fazendo, retry: 0}
-       - {id: t0-2, desc: "web Svelte painel :7777", aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots", status: pendente, retry: 0}
+       - {id: t0-1, desc: "backend axum+SQLite+SSE :7777", aceite: "API /api/state, /api/events, /api/control, heartbeat funcionando", status: feita, retry: 0}
+       - {id: t0-2, desc: "web Svelte painel :7777", aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots", status: feita, retry: 0}
        - {id: t0-3, desc: "tests/qemu/smoke.sh CI QEMU", aceite: "boot QEMU <30s + screendump + ISO amd64/i386", status: pendente, retry: 0}
        - {id: t0-4, desc: "systemd timer 5h + heartbeat por tarefa", aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas", status: pendente, retry: 0}}
   - {id: 1,  nome: design-system-assets,     peso: 4, aceite: "tokens.json + logo SVG 6 variantes + cursor + wallpapers + sons"}
