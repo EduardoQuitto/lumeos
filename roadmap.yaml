@@ -30,7 +30,12 @@ fases:
         - {id: t3-2, desc: "lume-detect: classificação de tiers (CPU/RAM/GPU/VA-API/VM)", aceite: "detecta Prime/Core/Lite, VM→Core padrão", status: feita, retry: 0}
         - {id: t3-3, desc: "API D-Bus para daemons (detect, updated, shield, filesd, stored, cli)", aceite: "interfaces D-Bus definidas e registradas", status: feita, retry: 0}
         - {id: t3-4, desc: "lume-fetch: CLI de informação do sistema (tier, hardware, versão)", aceite: "comando `lume fetch` funcional", status: feita, retry: 0}}
-  - {id: 4,  nome: barra-tray-relogio,       peso: 4, aceite: "barra pílula + indicadores + relógio por locale"}
+  - {id: 4,  nome: barra-tray-relogio,       peso: 4, aceite: "barra pilula + indicadores + relogio por locale",
+     gate: {testes: ["shell-bar-smoke", "shell-tray-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t4-1, desc: "shell/quickshell: barra pilula (48px, margem 8, icones 28, dot 3px, hover lift 2px)", aceite: "barra pilula com overflow chevron", status: feita, retry: 0}
+        - {id: t4-2, desc: "tray: Wi-Fi, volume/bateria, relogio 2 linhas por locale, cluster", aceite: "indicadores funcionam, relogio exibe locale", status: feita, retry: 0}
+        - {id: t4-3, desc: "shell/lite-host: host QML X11 (Qt6 i386, fallback Qt5)", aceite: "lite host roda em X11", status: feita, retry: 0}}
   - {id: 5,  nome: flyouts,                  peso: 4, aceite: "quick settings/redes/volume/calendário abrem <150ms"}
   - {id: 6,  nome: iniciar-busca,            peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo"}
   - {id: 7,  nome: janelas-snap-overview,    peso: 4, aceite: "libdecor Lume + snap 4 layouts + alt-tab + overview"}
