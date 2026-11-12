@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mission Control — Lume OS</title>
+<style>
+  :root { --marca:#45C8F5; --acento:#3E8EF7; --tinta:#0E1116; --papel:#F7F9FC; --superficie:#101418; --borda:#1e293b; --texto:#CBD5E1; --texto-suave:#94A3B8; --perigo:#C42B1C; --ok:#4ADE80; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--tinta); color: var(--texto); margin: 0; }
+  .mc { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--borda); padding-bottom: 12px; }
+  h1 { margin: 0; font-size: 20px; color: var(--acento); letter-spacing: 0.5px; }
+  .status { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .ok { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid var(--ok); }
+  .ok .dot { background: var(--ok); }
+  .alert { background: rgba(196,43,28,0.15); color: var(--perigo); border: 1px solid var(--perigo); }
+  .alert .dot { background: var(--perigo); }
+  main { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  section { background: var(--superficie); border-radius: 12px; padding: 16px; border: 1px solid var(--borda); }
+  h2 { margin-top: 0; font-size: 15px; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .fase-card { margin-bottom: 12px; border: 1px solid var(--borda); border-radius: 8px; overflow: hidden; }
+  .fase-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0a0c0f; font-size: 13px; font-weight: 600; }
+  .fase-head span.gate { font-size: 11px; color: var(--texto-suave); font-weight: normal; }
+  .progresso { height: 6px; background: #1e293b; }
+  .progresso .barra { height: 100%; background: var(--acento); width: 0%; transition: width 0.3s; }
+  .pct { text-align: right; font-size: 12px; color: var(--texto-suave); padding: 4px 14px 8px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { font-size: 13px; padding: 6px 14px; border-bottom: 1px solid #151b22; color: var(--texto); }
+  li:last-child { border-bottom: none; }
+  li.feita { color: var(--ok); }
+  li.bloqueada { color: var(--perigo); }
+  li em { color: var(--texto-suave); font-style: normal; font-size: 12px; }
+  .hb-form { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+  .hb-form input { background: #0a0c0f; border: 1px solid var(--borda); color: var(--texto); padding: 6px 10px; border-radius: 8px; font-family: inherit; font-size: 13px; }
+  .hb-form button { background: var(--acento); border: none; color: var(--tinta); padding: 6px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+  .hb-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .hb-status { font-size: 12px; color: var(--ok); margin-bottom: 8px; min-height: 16px; }
+  .hb-hint { font-size: 11px; color: var(--texto-suave); margin: 0; }
+  .btn { background: #334155; border: none; color: #F7F9FC; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; margin-right: 8px; }
+  .btn:hover { background: #475569; }
+  .btn.pausa { background: var(--perigo); }
+  .btn.pausa:hover { background: #e03121; }
+  .btn.ativo { background: var(--ok); color: var(--tinta); }
+  .evt-list { max-height: 400px; overflow-y: auto; font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 11px; }
+  .evt { padding: 6px 8px; border-bottom: 1px solid #151b22; display: flex; gap: 8px; }
+  .ts { color: var(--texto-suave); width: 64px; }
+  .tipo { color: var(--marca); width: 110px; font-weight: 700; }
+  .fase { color: #9D7BFA; width: 44px; }
+  .tarefa { color: #F65A8E; width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .payload { color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .shot { aspect-ratio: 16/9; background: #0a0c0f; border: 1px solid var(--borda); border-radius: 8px; overflow: hidden; position: relative; }
+  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .shot .label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: #fff; font-size: 11px; padding: 4px 8px; }
+  .empty { color: var(--texto-suave); font-size: 13px; padding: 20px; text-align: center; }
+  .control-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .lan-badge { font-size: 11px; color: var(--texto-suave); background: #1e293b; padding: 2px 8px; border-radius: 4px; }
+  footer { margin-top: 24px; font-size: 11px; color: var(--texto-suave); text-align: center; padding-bottom: 24px; }
+</style>
+</head>
+<body>
+<div class="mc">
+  <header>
+    <h1>Mission Control — Lume OS</h1>
+    <div class="status" id="status"></div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Fases (roadmap.yaml)</h2>
+      <div id="fases"></div>
+    </section>
+
+    <section>
+      <h2>Controle da sessão</h2>
+      <div class="control-row">
+        <button class="btn pausa" id="btnPause">Pausar</button>
+        <button class="btn" id="btnResume">Retomar</button>
+        <span id="lanBadge" class="lan-badge" style="display:none">LAN: token exigido</span>
+      </div>
+      <div class="hb-form">
+        <input type="text" id="hbTarefa" placeholder="tarefa" />
+        <input type="text" id="hbArquivo" placeholder="arquivo" />
+        <button id="btnHb">Enviar heartbeat</button>
+      </div>
+      <div class="hb-status" id="hbStatus"></div>
+      <p class="hb-hint">Heartbeat a cada tarefa e a cada 60 s em ops longas. Stale &gt; 10 min = alerta vermelho.</p>
+    </section>
+
+    <section>
+      <h2>Eventos (SSE)</h2>
+      <div class="evt-list" id="evtList"></div>
+    </section>
+
+    <section>
+      <h2>Galeria QMP (design/shots/&lt;fase&gt;)</h2>
+      <div class="shots" id="shots"></div>
+      <p class="empty" id="shotsEmpty">Nenhuma captura ainda. Salve screenshots em design/shots/&lt;fase&gt;/ e registre via POST /api/build.</p>
+    </section>
+  </main>
+
+  <footer>
+    Lume OS · CalVer 2026.11 · http://localhost:7777 · Sem WSL · Sem admin
+  </footer>
+</div>
+
+<script>
+const BASE = '';
+let sse = null;
+let since = '';
+let lan = false;
+
+async function carregarEstado() {
+  try {
+    const r = await fetch(`${BASE}/api/state`);
+    const e = await r.json();
+    renderEstado(e);
+  } catch (err) {
+    console.error('estado', err);
+  }
+}
+
+async function carregarControl() {
+  try {
+    const r = await fetch(`${BASE}/api/control`);
+    const c = await r.json();
+    const btnPause = document.getElementById('btnPause');
+    const btnResume = document.getElementById('btnResume');
+    if (c.pausada) {
+      btnPause.disabled = true; btnPause.classList.add('ativo');
+      btnResume.disabled = false; btnResume.classList.remove('ativo');
+    } else {
+      btnPause.disabled = false; btnPause.classList.remove('ativo');
+      btnResume.disabled = true; btnResume.classList.add('ativo');
+    }
+  } catch (err) {
+    console.error('control', err);
+  }
+}
+
+function renderEstado(e) {
+  const status = document.getElementById('status');
+  const fase = e.fases?.[0];
+  const blockers = e.blockers_totais ?? 0;
+  const cls = blockers > 0 ? 'alert' : 'ok';
+  status.innerHTML = `
+    <span class="chip ${cls}"><span class="dot"></span>Fase ${fase?.id ?? '—'} | Global ${Math.round(e.pct_global ?? 0)}% | Blockers ${blockers}</span>
+    <span class="chip">Sessão ${formatMs(e.sessoes?.[0]?.decorrido_s ?? 0)}</span>
+    <span class="chip">ETA ${e.eta ?? '—'}</span>
+  `;
+
+  const container = document.getElementById('fases');
+  container.innerHTML = '';
+  (e.fases ?? []).forEach(f => {
+    const card = document.createElement('div');
+    card.className = 'fase-card';
+    const pct = Math.round(f.pct);
+    const gateCls = f.gate.blockers > 0 ? 'color:#C42B1C' : 'color:#3E8EF7';
+    card.innerHTML = `
+      <div class="fase-head">
+        <strong>#{f.id} ${f.nome}</strong>
+        <span class="gate" style="${gateCls}">gate: testes ${f.gate.testes.join(', ') || '—'} | blockers ${f.gate.blockers} | signoff ${f.gate.signoff}</span>
+      </div>
+      <div class="progresso"><div class="barra" style="width:${pct}%"></div></div>
+      <div class="pct">${pct}%</div>
+      <ul>
+        ${(f.tarefas ?? []).map(t => `<li class="${t.status === 'bloqueada' ? 'bloqueada' : t.status === 'feita' ? 'feita' : ''}">${t.desc} <em>— ${t.status} (retry ${t.retry})</em></li>`).join('')}
+      </ul>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function formatMs(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+}
+
+function abrirSSE() {
+  if (sse) sse.close();
+  const url = since ? `${BASE}/api/events?since=${encodeURIComponent(since)}` : `${BASE}/api/events`;
+  sse = new EventSource(url);
+  sse.onmessage = (ev) => {
+    try {
+      const e = JSON.parse(ev.data);
+      since = e.ts;
+      adicionarEvento(e);
+    } catch (_) {}
+  };
+  sse.onerror = () => {
+    sse.close();
+    setTimeout(abrirSSE, 3000);
+  };
+}
+
+function adicionarEvento(e) {
+  const list = document.getElementById('evtList');
+  const div = document.createElement('div');
+  div.className = 'evt';
+  div.innerHTML = `
+    <span class="ts">${new Date(e.ts).toLocaleTimeString('pt-BR')}</span>
+    <span class="tipo">${e.tipo}</span>
+    <span class="fase">${e.fase ?? '—'}</span>
+    <span class="tarefa">${e.tarefa ?? '—'}</span>
+    <span class="payload">${escapeHtml(JSON.stringify(e.payload).slice(0, 140))}</span>
+  `;
+  list.prepend(div);
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+}
+
+async function enviarHeartbeat() {
+  const t = document.getElementById('hbTarefa').value.trim();
+  const a = document.getElementById('hbArquivo').value.trim();
+  if (!t) return;
+  const status = document.getElementById('hbStatus');
+  try {
+    const r = await fetch(`${BASE}/api/heartbeat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tarefa: t, arquivo: a || '-' })
+    });
+    status.textContent = r.ok ? 'heartbeat enviado' : 'erro';
+    status.style.color = r.ok ? '#4ADE80' : '#C42B1C';
+    document.getElementById('hbTarefa').value = '';
+    document.getElementById('hbArquivo').value = '';
+    setTimeout(() => (status.textContent = ''), 3000);
+  } catch (err) {
+    status.textContent = 'erro de rede';
+    status.style.color = '#C42B1C';
+  }
+}
+
+async function togglePause(pausar) {
+  try {
+    await fetch(`${BASE}/api/control`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pausada: pausar })
+    });
+    await carregarControl();
+  } catch (err) {
+    console.error('pause', err);
+  }
+}
+
+function carregarShots() {
+  const container = document.getElementById('shots');
+  const empty = document.getElementById('shotsEmpty');
+  container.innerHTML = '';
+  // placeholder: tenta ler /api/build não existe GET, apenas exibe vazio
+  empty.style.display = 'block';
+}
+
+document.getElementById('btnPause').onclick = () => togglePause(true);
+document.getElementById('btnResume').onclick = () => togglePause(false);
+document.getElementById('btnHb').onclick = enviarHeartbeat;
+
+carregarEstado();
+carregarControl();
+abrirSSE();
+setInterval(carregarEstado, 5000);
+setInterval(carregarControl, 5000);
+carregarShots();
+</script>
+</body>
+</html>
