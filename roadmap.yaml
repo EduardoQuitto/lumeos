@@ -55,7 +55,13 @@ fases:
         - {id: t7-2, desc: "snap: 4 layouts (borda/canto + Super+setas)", aceite: "arrastar borda/canto e Super+setas funcionam", status: feita, retry: 0}
         - {id: t7-3, desc: "alt-tab switcher", aceite: "alternar janelas com Alt+Tab", status: feita, retry: 0}
         - {id: t7-4, desc: "overview: Super+Tab com thumbnails centralizados", aceite: "thumbnails centralizados, abrir <200ms", status: feita, retry: 0}}
-  - {id: 8,  nome: lume-files,               peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extração"}
+  - {id: 8,  nome: lume-files,               peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extraccao",
+     gate: {testes: ["files-toolbar-smoke", "files-breadcrumb-smoke", "files-abas-smoke", "files-busca-smoke", "files-lixo-smoke", "files-montagem-smoke", "files-extracao-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t8-1, desc: "lume-files: toolbar + breadcrumb + abas", aceite: "toolbar com acoes, breadcrumb editavel, abas com arrasto", status: feita, retry: 0}
+        - {id: t8-2, desc: "lume-files: busca rg + grade/lista + sidebar", aceite: "busca com rg, visualizacao grade e lista, sidebar lugares/dispositivos/lixo", status: feita, retry: 0}
+        - {id: t8-3, desc: "lume-files: lixo + montagem (udisks2)", aceite: "lixeira com restaurar/esvaziar, montagem de dispositivos USB", status: feita, retry: 0}
+        - {id: t8-4, desc: "lume-files: extracao p7zip + propriedades", aceite: "extrair arquivos compactados, ver propriedades de arquivos", status: feita, retry: 0}}
   - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas"}
   - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield"}
   - {id: 11, nome: terminal-cli,             peso: 3, aceite: "foot+starship+quake+command-not-found+CLI lume completa"}
