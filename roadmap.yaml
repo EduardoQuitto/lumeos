@@ -62,7 +62,13 @@ fases:
         - {id: t8-2, desc: "lume-files: busca rg + grade/lista + sidebar", aceite: "busca com rg, visualizacao grade e lista, sidebar lugares/dispositivos/lixo", status: feita, retry: 0}
         - {id: t8-3, desc: "lume-files: lixo + montagem (udisks2)", aceite: "lixeira com restaurar/esvaziar, montagem de dispositivos USB", status: feita, retry: 0}
         - {id: t8-4, desc: "lume-files: extracao p7zip + propriedades", aceite: "extrair arquivos compactados, ver propriedades de arquivos", status: feita, retry: 0}}
-  - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas"}
+  - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas",
+     gate: {testes: ["settings-sistema-smoke", "settings-tela-smoke", "settings-som-smoke", "settings-rede-smoke", "settings-bt-smoke", "settings-personalizacao-smoke", "settings-apps-smoke", "settings-contas-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t9-1, desc: "settings: janela principal com nav esquerda 240px vidro-lite + conteudo papel/tinta", aceite: "janela settings abre com navegacao lateral", status: feita, retry: 0}
+        - {id: t9-2, desc: "settings: paginas sistema, tela, som", aceite: "3 paginas funcionais com toques e slider", status: feita, retry: 0}
+        - {id: t9-3, desc: "settings: paginas rede, bt", aceite: "2 paginas de conectividade funcionais", status: feita, retry: 0}
+        - {id: t9-4, desc: "settings: paginas personalizacao, apps, contas", aceite: "3 paginas finais funcionais", status: feita, retry: 0}}
   - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield"}
   - {id: 11, nome: terminal-cli,             peso: 3, aceite: "foot+starship+quake+command-not-found+CLI lume completa"}
   - {id: 12, nome: loja,                     peso: 4, aceite: "8 categorias + badges tier + fila + flatpak install/remove"}
