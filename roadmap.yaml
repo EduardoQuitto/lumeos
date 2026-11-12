@@ -23,7 +23,13 @@ fases:
         - {id: t2-1, desc: "estrutura iso/{plymouth,calamares,grub,hooks} + Plymouth Lume (arcos orbitais)", aceite: "Plymouth com tema Lume, tela de boot amd64", status: feita, retry: 0}
         - {id: t2-2, desc: "build/live-build/build.sh para ISO amd64 (<1,4 GB)", aceite: "script de build da ISO como artefato para Linux", status: feita, retry: 0}
         - {id: t2-3, desc: "tests/qemu/smoke.sh boot QEMU <20s + screendump", aceite: "boot <20s + screenshot salvo em design/shots/2/", status: feita, retry: 0}}
-  - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch"}
+  - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch",
+     gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t3-1, desc: "estrutura services/{detect,updated,shield,filesd,stored,cli} em Rust", aceite: "pastas criadas com Cargo.toml cada", status: feita, retry: 0}
+        - {id: t3-2, desc: "lume-detect: classificação de tiers (CPU/RAM/GPU/VA-API/VM)", aceite: "detecta Prime/Core/Lite, VM→Core padrão", status: feita, retry: 0}
+        - {id: t3-3, desc: "API D-Bus para daemons (detect, updated, shield, filesd, stored, cli)", aceite: "interfaces D-Bus definidas e registradas", status: feita, retry: 0}
+        - {id: t3-4, desc: "lume-fetch: CLI de informação do sistema (tier, hardware, versão)", aceite: "comando `lume fetch` funcional", status: feita, retry: 0}}
   - {id: 4,  nome: barra-tray-relogio,       peso: 4, aceite: "barra pílula + indicadores + relógio por locale"}
   - {id: 5,  nome: flyouts,                  peso: 4, aceite: "quick settings/redes/volume/calendário abrem <150ms"}
   - {id: 6,  nome: iniciar-busca,            peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo"}
