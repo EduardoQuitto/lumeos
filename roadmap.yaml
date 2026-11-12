@@ -48,7 +48,13 @@ fases:
       tarefas:
         - {id: t6-1, desc: "menu iniciar 640x560: busca topo, grid 6x3 fixados, recentes, rodape usuario+energia", aceite: "menu abre <200ms, layout 640x560", status: feita, retry: 0}
         - {id: t6-2, desc: "busca universal: apps/arquivos/configs/calculo (web off padrao)", aceite: "4 provedores, resultados <100ms", status: feita, retry: 0}}
-  - {id: 7,  nome: janelas-snap-overview,    peso: 4, aceite: "libdecor Lume + snap 4 layouts + alt-tab + overview"}
+  - {id: 7,  nome: janelas-snap-overview,    peso: 4, aceite: "libdecor Lume + snap 4 layouts + alt-tab + overview",
+     gate: {testes: ["libdecor-smoke", "snap-smoke", "alt-tab-smoke", "overview-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t7-1, desc: "libdecor-lume: plugin para janelas terceiros (CSD QML + decorações)", aceite: "plugin compila e registra janelas", status: feita, retry: 0}
+        - {id: t7-2, desc: "snap: 4 layouts (borda/canto + Super+setas)", aceite: "arrastar borda/canto e Super+setas funcionam", status: feita, retry: 0}
+        - {id: t7-3, desc: "alt-tab switcher", aceite: "alternar janelas com Alt+Tab", status: feita, retry: 0}
+        - {id: t7-4, desc: "overview: Super+Tab com thumbnails centralizados", aceite: "thumbnails centralizados, abrir <200ms", status: feita, retry: 0}}
   - {id: 8,  nome: lume-files,               peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extração"}
   - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas"}
   - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield"}
