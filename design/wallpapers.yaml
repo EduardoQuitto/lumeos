@@ -1,0 +1,21 @@
+pack: lume-wallpapers
+defaults: {light: aurora-lume, dark: aurora-lume}
+regras:
+  pareamento: automatico-por-tema
+  licenca: verificar-por-arquivo   # próprio, CC0 ou comprovada; nunca Apple/Microsoft
+  resolucao_minima: 3840x2160
+  variantes: [light, dark]         # obrigatórias para cada id
+wallpapers:
+  - id: aurora-lume
+    nome: Aurora Lume
+    light: wallpapers/aurora-lume/light.png
+    dark: wallpapers/aurora-lume/dark.png
+    origem: gerado-por-shader
+    licenca: proprio
+  # ↓ preencher com a sua lista (um bloco por wallpaper, light+dark)
+  - id: <seu-id>
+    nome: <Nome>
+    light: wallpapers/<seu-id>/light.png
+    dark: wallpapers/<seu-id>/dark.png
+    origem: <gerado|foto|terceiro>
+    licenca: <proprio|CC0|comprovada>

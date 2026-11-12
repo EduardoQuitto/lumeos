@@ -1,0 +1,13 @@
+# Mapeia as capturas do dono para superfícies do VISION.md.
+# O agente preenche ao receber as imagens; até lá, references/ pode ficar vazio
+# e o gate estético usa apenas o VISION (sem diff pixel).
+referencias:
+  - superficie: desktop          # desktop|janela|flyouts|iniciar|toasts|overview|
+    arquivo: desktop-prime.png   # greeter|oobe|settings|terminal|energia|instalador
+    tiers: [prime]
+    temas: [light, dark]
+  - superficie: janela
+    arquivo: files-prime.png
+    tiers: [prime]
+    temas: [light, dark]
+tolerancia: {layout: identico, cor_delta_e: 3, raio_px: 1}

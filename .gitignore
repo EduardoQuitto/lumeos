@@ -1,0 +1,3 @@
+target/ node_modules/ dist/ out/ __pycache__/ .venv/
+*.iso *.img *.squashfs *.sqlite *.sqlite-journal
+.agent-control .env

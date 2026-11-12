@@ -1,0 +1,38 @@
+projeto: lume-os
+versao: "2026.11"
+canal: stable
+fases:
+  - {id: 0,  nome: fundacao-mission-control, peso: 4, aceite: "painel :7777 com heartbeat + CI QEMU verde + PRD.md gerado",
+     gate: {testes: ["backend-smoke", "web-smoke", "qemu-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t0-1, desc: "backend axum+SQLite+SSE :7777", aceite: "API /api/state, /api/events, /api/control, heartbeat funcionando", status: fazendo, retry: 0}
+       - {id: t0-2, desc: "web Svelte painel :7777", aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots", status: pendente, retry: 0}
+       - {id: t0-3, desc: "tests/qemu/smoke.sh CI QEMU", aceite: "boot QEMU <30s + screendump + ISO amd64/i386", status: pendente, retry: 0}
+       - {id: t0-4, desc: "systemd timer 5h + heartbeat por tarefa", aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas", status: pendente, retry: 0}}
+  - {id: 1,  nome: design-system-assets,     peso: 4, aceite: "tokens.json + logo SVG 6 variantes + cursor + wallpapers + sons"}
+  - {id: 2,  nome: iso-amd64-boot,           peso: 4, aceite: "boot QEMU <20s + Plymouth Lume + screenshot"}
+  - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch"}
+  - {id: 4,  nome: barra-tray-relogio,       peso: 4, aceite: "barra pílula + indicadores + relógio por locale"}
+  - {id: 5,  nome: flyouts,                  peso: 4, aceite: "quick settings/redes/volume/calendário abrem <150ms"}
+  - {id: 6,  nome: iniciar-busca,            peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo"}
+  - {id: 7,  nome: janelas-snap-overview,    peso: 4, aceite: "libdecor Lume + snap 4 layouts + alt-tab + overview"}
+  - {id: 8,  nome: lume-files,               peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extração"}
+  - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas"}
+  - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield"}
+  - {id: 11, nome: terminal-cli,             peso: 3, aceite: "foot+starship+quake+command-not-found+CLI lume completa"}
+  - {id: 12, nome: loja,                     peso: 4, aceite: "8 categorias + badges tier + fila + flatpak install/remove"}
+  - {id: 13, nome: essenciais-pwa-mime,      peso: 3, aceite: "OOBE 1-clique instala pacote + PWAs + MIME defaults"}
+  - {id: 14, nome: oobe-login-energia,       peso: 4, aceite: "OOBE+greeter+lock+telas desligar/reiniciar/atualizar"}
+  - {id: 15, nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalação"}
+  - {id: 16, nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalação"}
+  - {id: 17, nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB"}
+  - {id: 18, nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle ≤350MB"}
+  - {id: 19, nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando"}
+  - {id: 20, nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier"}
+  - {id: 21, nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper"}
+  - {id: 22, nome: modo-cofre,               peso: 3, aceite: "microVM descartável abre app de risco e销毁 sem resíduo"}
+  - {id: 23, nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automático + teste update"}
+  - {id: 24, nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido"}
+  - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
+  - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalação + update + segurança + diff visual"}
+  - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você"}

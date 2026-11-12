@@ -1,0 +1,11 @@
+[Unit]
+Description=Lume OS Mission Control heartbeat timer (5 h session)
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/curl -s -X POST http://localhost:7777/api/heartbeat -H 'Content-Type: application/json' -d '{"tarefa":"sessao-5h","arquivo":"mission-control/backend/src/main.rs"}'
+WorkingDirectory=/w/lume-os
+
+[Install]
+WantedBy=multi-user.target

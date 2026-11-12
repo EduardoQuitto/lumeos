@@ -1,0 +1,11 @@
+[Unit]
+Description=Lume OS Mission Control heartbeat every 60s during 5h session
+Requires=lume-mc-heartbeat.service
+
+[Timer]
+OnCalendar=*:*:00
+AccuracySec=1s
+Unit=lume-mc-heartbeat.service
+
+[Install]
+WantedBy=timers.target

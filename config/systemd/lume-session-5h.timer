@@ -1,0 +1,10 @@
+[Unit]
+Description=Lume OS 5 h session timer
+Requires=lume-session-5h.service
+
+[Timer]
+OnBootSec=5h
+Unit=lume-session-5h.service
+
+[Install]
+WantedBy=timers.target
