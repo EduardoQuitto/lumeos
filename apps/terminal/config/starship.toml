@@ -1,0 +1,388 @@
+# starship — prompt para Lume OS Terminal
+# Configuração baseada na paleta Lume
+
+# Formato geral
+format = """
+$all
+"""
+
+# Desabilitar linha em branco no início
+add_newline = false
+
+# Caractere de prompt
+[character]
+success_symbol = "[➜](bold #3e8ef7)"
+error_symbol = "[✗](bold #c42b1c)"
+vicmd_symbol = "[➤](bold #9d7bfa)"
+format = "$symbol "
+
+# Tempo de execução
+[duration]
+format = "[⏱ $duration](bold #f65a8e) "
+show_milliseconds = false
+min_time = 500
+
+# Usuário
+[username]
+format = "[👤 $user](bold #45c8f5)"
+show_always = true
+style_user = "bold #45c8f5"
+style_root = "bold #c42b1c"
+disabled = false
+
+# Nome do host
+[hostname]
+format = "[🖥 $hostname](bold #9d7bfa)"
+ssh_only = false
+disabled = false
+
+# Diretório atual
+[directory]
+format = "[📁 $path](bold #f7f9fc)"
+style = "bold #f7f9fc"
+truncation_length = 4
+truncate_to_repo = false
+
+# Git
+[git_branch]
+symbol = " "
+format = "[$symbol$branch](bold #45c8f5)"
+style = "bold #45c8f5"
+truncation_length = 4
+truncate_to_repo = false
+
+[git_status]
+format = '([$all_status$ahead_behind](bold #f65a8e))'
+style = "bold #f65a8e"
+conflicted = "="
+ahead = "↑$count"
+behind = "↓$count"
+diverged = "↕$count"
+untracked = "?"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+readonly = "🔒"
+
+# Terraform
+[terraform]
+format = "[☁️ $workspace](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# AWS
+[aws]
+format = "[☁️ $profile](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Azure
+[azure]
+format = "[☁️ $subscription](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# GCP
+[gcp]
+format = "[☁️ $account](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Kubernetes
+[kubernetes]
+format = '[☸ $context on $namespace](bold #3e8ef7)'
+style = "bold #3e8ef7"
+format_prefix = "["
+format_suffix = "]"
+disabled = false
+
+# Docker Context
+[docker_context]
+format = "[🐳 $context](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Golang
+[golang]
+format = "[🐹 $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Rust
+[rust]
+format = "[⚙️ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Node.js
+[nodejs]
+format = "[⬢ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Python
+[python]
+format = "[🐍 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Ruby
+[ruby]
+format = "[💎 $version](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# PHP
+[php]
+format = "[🐘 $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Java
+[java]
+format = "[☕ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Lua
+[lua]
+format = "[🌙 $version](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Dart
+[dart]
+format = "[🦘 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Swift
+[swift]
+format = "[🐦 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Nix
+[nix-shell]
+format = "[❄️ $name](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Nix
+[nim]
+format = "[🍃 $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# OCaml
+[ocaml]
+format = "[🐫 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Elixir
+[elixir]
+format = "[💧 $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Erlang
+[erlang]
+format = "[⚡ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Crystal
+[crystal]
+format = "[🔮 $version](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Julia
+[julia]
+format = "[▲ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Zig
+[zig]
+format = "[⚡ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Vlang
+[vlang]
+format = "[🅥 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Package version
+[package]
+format = "[📦 $version](bold #9d7bfa)"
+disabled = false
+
+# Java extensions
+[java_extensions]
+format = "[☕ $extensions](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Rust extensions
+[rust_extensions]
+format = "[⚙️ $extensions](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Character
+[character]
+success_symbol = "[➜](bold #3e8ef7)"
+error_symbol = "[✗](bold #c42b1c)"
+vicmd_symbol = "[➤](bold #9d7bfa)"
+format = "$symbol "
+
+# Execution time
+[duration]
+format = "[⏱ $duration](bold #f65a8e)"
+min_time = 500
+
+# Git state
+[git_state]
+format = "[$state]($style) "
+style = "bold #f65a8e"
+rebase = "REBASE"
+merge = "MERGE"
+revert = "REVERT"
+cherry_pick = "CHERRY-PICK"
+bisect = "BISECT"
+am = "AM"
+am_or_rebase = "AM/REBASE"
+
+# Jobs
+[jobs]
+format = "[⚡ $number jobs](bold #f65a8e)"
+style = "bold #f65a8e"
+threshold = 1
+
+# Command time
+[cmd_duration]
+format = "[took $duration](bold #9d7bfa)"
+min_time = 500
+format_prefix = "("
+format_suffix = ")"
+
+# Line break
+[line_break]
+disabled = false
+
+# Fill
+[fill]
+format = "└─"
+
+# OS
+[os]
+format = "[$symbol $name $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+symbol = "🐧"
+
+# Shell level
+[shlvl]
+format = "[shlvl $level](bold #9d7bfa)"
+disabled = false
+
+# Singularity
+[singularity]
+format = "[☁️ $env](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Conda
+[conda]
+format = "[🅒 $environment](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Pyenv
+[pyenv]
+format = "[🐍 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Dotnet
+[dotnet]
+format = "[• $version](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Golang
+[golang]
+format = "[🐹 $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Java
+[java]
+format = "[☕ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Lua
+[lua]
+format = "[🌙 $version](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Node.js
+[nodejs]
+format = "[⬢ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# PHP
+[php]
+format = "[🐘 $version](bold #45c8f5)"
+style = "bold #45c8f5"
+disabled = false
+
+# Python
+[python]
+format = "[🐍 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Ruby
+[ruby]
+format = "[💎 $version](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Rust
+[rust]
+format = "[⚙️ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Swift
+[swift]
+format = "[🐦 $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Terraform
+[terraform]
+format = "[☁️ $workspace](bold #9d7bfa)"
+style = "bold #9d7bfa"
+disabled = false
+
+# Vagrant
+[vagrant]
+format = "[📦 $box](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
+
+# Zig
+[zig]
+format = "[⚡ $version](bold #f65a8e)"
+style = "bold #f65a8e"
+disabled = false
