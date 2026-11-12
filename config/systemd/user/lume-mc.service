@@ -1,0 +1,14 @@
+[Unit]
+Description=Lume Mission Control
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/lume-os/mission-control/backend/target/release/lume-mission-control
+Restart=always
+RestartSec=5
+Environment=MC_DB=%h/lume-os/mission-control/events.sqlite
+WorkingDirectory=%h/lume-os/mission-control/backend
+
+[Install]
+WantedBy=default.target

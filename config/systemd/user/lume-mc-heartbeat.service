@@ -1,0 +1,7 @@
+[Unit]
+Description=Lume Mission Control heartbeat (envia a cada 60 s)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/curl -s -X POST http://localhost:7777/api/heartbeat -H 'Content-Type: application/json' -d '{"tarefa":"sessao-5h","arquivo":"mission-control/backend/src/main.rs"}'
+WorkingDirectory=%h/lume-os
