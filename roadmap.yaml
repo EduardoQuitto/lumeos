@@ -43,7 +43,11 @@ fases:
         - {id: t5-2, desc: "flyout quick settings (6 toggles + 2 sliders + bateria + editar)", aceite: "abre <150ms", status: feita, retry: 0}
         - {id: t5-3, desc: "flyout volume (dispositivos de áudio)", aceite: "abre <150ms", status: feita, retry: 0}
         - {id: t5-4, desc: "flyout calendario+notificacoes (mes + lista + limpar)", aceite: "abre <150ms", status: feita, retry: 0}}
-  - {id: 6,  nome: iniciar-busca,            peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo"}
+  - {id: 6,  nome: iniciar-busca,            peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo",
+     gate: {testes: ["menu-iniciar-smoke", "busca-universal-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t6-1, desc: "menu iniciar 640x560: busca topo, grid 6x3 fixados, recentes, rodape usuario+energia", aceite: "menu abre <200ms, layout 640x560", status: feita, retry: 0}
+        - {id: t6-2, desc: "busca universal: apps/arquivos/configs/calculo (web off padrao)", aceite: "4 provedores, resultados <100ms", status: feita, retry: 0}}
   - {id: 7,  nome: janelas-snap-overview,    peso: 4, aceite: "libdecor Lume + snap 4 layouts + alt-tab + overview"}
   - {id: 8,  nome: lume-files,               peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extração"}
   - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas"}
