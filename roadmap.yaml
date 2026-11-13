@@ -108,7 +108,12 @@ fases:
        - {id: t15-2, desc: "instalador HD: LUKS+A/B (slots A e B)", aceite: "particao LUKS com slots A e B funcionais", status: pendente, retry: 0}
        - {id: t15-3, desc: "instalador HD: instalacao em VM teste", aceite: "instalacao completa em VM sem erros", status: pendente, retry: 0}
        - {id: t15-4, desc: "instalador HD: teste instalacao", aceite: "teste de instalacao completa aprovado", status: pendente, retry: 0}}
-  - {id: 16, nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalação"}
+  - {id: 16,  nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalacao",
+     gate: {testes: ["pendrive-luks-smoke", "pendrive-backup-smoke", "pendrive-restore-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t16-1, desc: "criador USB LUKS + backup/restore", aceite: "pendrive USB com criptografia LUKS", status: feita, retry: 0}
+        - {id: t16-2, desc: "instalacao em pendrive persistente", aceite: "SO instalado e bootavel em pendrive", status: feita, retry: 0}
+        - {id: t16-3, desc: "teste instalacao pendrive", aceite: "teste de instalacao completa aprovado", status: feita, retry: 0}}
   - {id: 17, nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB"}
   - {id: 18, nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle ≤350MB"}
   - {id: 19, nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando"}
