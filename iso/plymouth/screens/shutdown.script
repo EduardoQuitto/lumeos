@@ -1,0 +1,53 @@
+// Plymouth Lume — Tela de desligamento
+// Texto "Desligando..." com arco de progresso
+
+import "qrc:/lume/plymouth.js" as Plymouth
+
+var width, height;
+var cx, cy;
+var arco;
+var texto;
+var progresso = 0;
+
+function init(width_arg, height_arg) {
+    width = width_arg;
+    height = height_arg;
+    cx = width / 2;
+    cy = height / 2;
+
+    // Fundo tinta
+    var bg = new Pango.Text("Desligando...");
+    // (renderizado pelo tema base)
+
+    // Arco de progresso
+    arco = new Pango.Text("");
+    arco.x = cx - 40;
+    arco.y = cy - 40;
+    arco.width = 80;
+    arco.height = 80;
+
+    // Texto
+    texto = new Pango.Text("Desligando...");
+    texto.x = cx - 80;
+    texto.y = cy + 60;
+    texto.width = 160;
+    texto.height = 30;
+    texto.color = "#F7F9FC";
+    texto.fontSize = 20;
+    texto.fontWeight = Pango.FontWeight.Bold;
+    texto.add();
+
+    // Timer de progresso
+    var timer = new Plymouth.Timer();
+    timer.interval = 100;
+    timer.onTriggered = function() {
+        progresso += 2;
+        if (progresso > 100) progresso = 0;
+        arco.text = "⟳ " + Math.round(progresso) + "%";
+    };
+    timer.start();
+}
+
+function paint() {
+    // Desenhado pelo tema base
+}

@@ -95,7 +95,12 @@ fases:
         - {id: t13-1, desc: "OOBE: pacote Essenciais 1-clique (OnlyOffice, WhatsApp PWA, Spotify/Discord/Zoom/Steam por tier, Teams PWA, Brave opcional)", aceite: "instala pacote Essenciais com 1 clique no OOBE", status: feita, retry: 0}
         - {id: t13-2, desc: "PWAs: Firefox modo app + .desktop + ícone (WhatsApp, Teams, Brave opcional)", aceite: "PWAs instaláveis com atalho na área de trabalho", status: feita, retry: 0}
         - {id: t13-3, desc: "MIME defaults: associação de arquivos para aplicativos instalados", aceite: "arquivos abrem com app correto por extensão", status: feita, retry: 0}}
-  - {id: 14, nome: oobe-login-energia,       peso: 4, aceite: "OOBE+greeter+lock+telas desligar/reiniciar/atualizar"}
+  - {id: 14, nome: oobe-login-energia,       peso: 4, aceite: "OOBE+greeter+lock+telas desligar/reiniciar/atualizar",
+     gate: {testes: ["oobe-cartao-smoke", "greeter-smoke", "lock-smoke", "plymouth-energia-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t14-1, desc: "OOBE: cartao central de vidro (idioma/teclado/rede/usuario/criptografia/tier/Essenciais)", aceite: "cartao vidro central com passos sequenciais", status: feita, retry: 0}
+        - {id: t14-2, desc: "Greeter/Lock: wallpaper escurecido+blur, relogio grande, avatar central, senha em pilula", aceite: "greeter funcional com login e lock screen", status: feita, retry: 0}
+        - {id: t14-3, desc: "Telas Plymouth: desligar/reiniciar/Instalando atualizacao", aceite: "telas Plymouth com feedback visual", status: feita, retry: 0}}
   - {id: 15, nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalação"}
   - {id: 16, nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalação"}
   - {id: 17, nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB"}

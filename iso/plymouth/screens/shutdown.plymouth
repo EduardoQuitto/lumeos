@@ -1,0 +1,13 @@
+# Plymouth Lume — Tela de desligamento
+# Fundo tinta com mensagem de desligamento
+
+[Daemon]
+Theme=lume
+
+[Theme]
+Name=Lume Desligando
+Description=Tela de desligamento Lume OS
+ModuleName=lume
+
+[theme]
+Directory=/usr/share/plymouth/themes/lume

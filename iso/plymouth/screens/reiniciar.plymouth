@@ -1,0 +1,13 @@
+# Plymouth Lume — Tela de reiniciando
+# Fundo tinta com mensagem de reiniciando
+
+[Daemon]
+Theme=lume
+
+[Theme]
+Name=Lume Reiniciando
+Description=Tela de reiniciando Lume OS
+ModuleName=lume
+
+[theme]
+Directory=/usr/share/plymouth/themes/lume

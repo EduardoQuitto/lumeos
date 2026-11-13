@@ -1,0 +1,13 @@
+# Plymouth Lume — Tela de atualizacao
+# Fundo tinta com mensagem de instalando atualizacao
+
+[Daemon]
+Theme=lume
+
+[Theme]
+Name=Lume Instalando Atualizacao
+Description=Tela de instalando atualizacao Lume OS
+ModuleName=lume
+
+[theme]
+Directory=/usr/share/plymouth/themes/lume
