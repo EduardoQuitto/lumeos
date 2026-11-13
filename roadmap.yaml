@@ -114,7 +114,13 @@ fases:
         - {id: t16-1, desc: "criador USB LUKS + backup/restore", aceite: "pendrive USB com criptografia LUKS", status: feita, retry: 0}
         - {id: t16-2, desc: "instalacao em pendrive persistente", aceite: "SO instalado e bootavel em pendrive", status: feita, retry: 0}
         - {id: t16-3, desc: "teste instalacao pendrive", aceite: "teste de instalacao completa aprovado", status: feita, retry: 0}}
-  - {id: 17, nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle â‰¤250MB"}
+  - {id: 17,  nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle =250MB",
+     gate: {testes: ["lite-iso-smoke", "lite-x11-smoke", "lite-picom-smoke", "lite-idle-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t17-1, desc: "edição Lite i386: ISO bootável i386", aceite: "ISO i386 bootável em VM", status: feita, retry: 0}
+       - {id: t17-2, desc: "edição Lite: shell X11 + picom", aceite: "shell X11 com picom funcionando", status: feita, retry: 0}
+       - {id: t17-3, desc: "edição Lite: idle =250MB", aceite: "idle =250MB em VM Lite", status: pendente, retry: 0}
+       - {id: t17-4, desc: "edição Lite: teste boot em VM", aceite: "teste de boot completo em VM aprovado", status: feita, retry: 0}}
   - {id: 18, nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle â‰¤350MB"}
   - {id: 19, nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando"}
   - {id: 20, nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier"}
@@ -125,3 +131,5 @@ fases:
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalaÃ§Ã£o + update + seguranÃ§a + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por vocÃª"}
+
+
