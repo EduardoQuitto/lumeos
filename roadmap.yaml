@@ -128,7 +128,13 @@ fases:
        - {id: t18-2, desc: "ediÁ„o Core: matriz materiais (NÈvoa + SÛlido + sombras)", aceite: "materiais NÈvoa, SÛlido e sombras funcionais", status: feita, retry: 0}
        - {id: t18-3, desc: "ediÁ„o Core: idle =350MB", aceite: "idle =350MB em VM Core", status: pendente, retry: 0}
        - {id: t18-4, desc: "ediÁ„o Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: feita, retry: 0}}
-  - {id: 19, nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando"}
+  - {id: 19,  nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando",
+     gate: {testes: ["win-wine-smoke", "win-bwrap-smoke", "win-selos-smoke", "win-3apps-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t19-1, desc: "camada Windows: Wine+NTSYNC", aceite: "Wine com NTSYNC funcional", status: feita, retry: 0}
+       - {id: t19-2, desc: "camada Windows: garrafas bwrap com selos", aceite: "garrafas isoladas com selos de tier", status: feita, retry: 0}
+       - {id: t19-3, desc: "camada Windows: 3 apps da lista rodando", aceite: "3 apps Windows rodando em garrafas", status: feita, retry: 0}
+       - {id: t19-4, desc: "camada Windows: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
   - {id: 20, nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier"}
   - {id: 21, nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper"}
   - {id: 22, nome: modo-cofre,               peso: 3, aceite: "microVM descart√°vel abre app de risco eÈîÄÊØÅ sem res√≠duo"}
@@ -137,6 +143,8 @@ fases:
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instala√ß√£o + update + seguran√ßa + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por voc√™"}
+
+
 
 
 
