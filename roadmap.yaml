@@ -89,7 +89,12 @@ fases:
         - {id: t12-2, desc: "loja: badges tier (prime/core/lite) + fila de instalação", aceite: "badges de tier em apps + fila com progresso", status: feita, retry: 0}
         - {id: t12-3, desc: "loja: flatpak install/remove", aceite: "instalar e remover pacotes flatpak", status: feita, retry: 0}
         - {id: t12-4, desc: "loja: updates separado sistema/apps + aba garrafas", aceite: "updates sistema/apps separados + aba garrafas Windows", status: feita, retry: 0}}
-  - {id: 13, nome: essenciais-pwa-mime,      peso: 3, aceite: "OOBE 1-clique instala pacote + PWAs + MIME defaults"}
+  - {id: 13, nome: essenciais-pwa-mime,      peso: 3, aceite: "OOBE 1-clique instala pacote + PWAs + MIME defaults",
+     gate: {testes: ["essenciais-pacote-smoke", "pwa-smoke", "mime-smoke"], blockers: 0, signoff: pendente},
+      tarefas:
+        - {id: t13-1, desc: "OOBE: pacote Essenciais 1-clique (OnlyOffice, WhatsApp PWA, Spotify/Discord/Zoom/Steam por tier, Teams PWA, Brave opcional)", aceite: "instala pacote Essenciais com 1 clique no OOBE", status: feita, retry: 0}
+        - {id: t13-2, desc: "PWAs: Firefox modo app + .desktop + ícone (WhatsApp, Teams, Brave opcional)", aceite: "PWAs instaláveis com atalho na área de trabalho", status: feita, retry: 0}
+        - {id: t13-3, desc: "MIME defaults: associação de arquivos para aplicativos instalados", aceite: "arquivos abrem com app correto por extensão", status: feita, retry: 0}}
   - {id: 14, nome: oobe-login-energia,       peso: 4, aceite: "OOBE+greeter+lock+telas desligar/reiniciar/atualizar"}
   - {id: 15, nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalação"}
   - {id: 16, nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalação"}
