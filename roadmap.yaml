@@ -135,7 +135,13 @@ fases:
        - {id: t19-2, desc: "camada Windows: garrafas bwrap com selos", aceite: "garrafas isoladas com selos de tier", status: feita, retry: 0}
        - {id: t19-3, desc: "camada Windows: 3 apps da lista rodando", aceite: "3 apps Windows rodando em garrafas", status: feita, retry: 0}
        - {id: t19-4, desc: "camada Windows: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
-  - {id: 20, nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier"}
+  - {id: 20,  nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier",
+     gate: {testes: ["cloud-steam-smoke", "cloud-sober-smoke", "cloud-pwa-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t20-1, desc: "jogos-nuvem: Steam+Proton para tiers B/C", aceite: "Steam+Proton instalado e funcional", status: feita, retry: 0}
+       - {id: t20-2, desc: "jogos-nuvem: Sober best-effort", aceite: "Sober instalado e funcional", status: feita, retry: 0}
+       - {id: t20-3, desc: "jogos-nuvem: PWAs nuvem por tier", aceite: "PWAs por tier (Prime/Core/Lite)", status: pendente, retry: 0}
+       - {id: t20-4, desc: "jogos-nuvem: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
   - {id: 21, nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper"}
   - {id: 22, nome: modo-cofre,               peso: 3, aceite: "microVM descartável abre app de risco e销毁 sem resíduo"}
   - {id: 23, nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automático + teste update"}
@@ -143,6 +149,8 @@ fases:
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalação + update + segurança + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você"}
+
+
 
 
 

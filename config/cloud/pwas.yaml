@@ -1,0 +1,104 @@
+# PWAs Nuvem — Lume OS
+# Requisitos fase 20:
+#   - PWAs nuvem por tier
+
+[pack pwm-prime]
+nome = "PWAs Nuvem Prime"
+tier = "prime"
+descricao = "PWAs de jogos na nuvem para tier Prime"
+
+[apps]
+  - nome: "GeForce Now"
+    url: "https://play.geforce.com"
+    icone: "geforce-now.svg"
+    descricao: "Jogos na nuvem NVIDIA GeForce Now"
+    status: "disponível"
+    categoria: "jogos"
+
+  - nome: "Google Stadia"
+    url: "https://stadia.google.com"
+    icone: "stadia.svg"
+    descricao: "Jogos na nuvem Google Stadia"
+    status: "descontinuado"
+    categoria: "jogos"
+
+  - nome: "Xbox Cloud Gaming"
+    url: "https://xbox.com/play"
+    icone: "xbox-cloud.svg"
+    descricao: "Jogos na nuvem Xbox Cloud Gaming"
+    status: "disponível"
+    categoria: "jogos"
+
+  - nome: "Amazon Luna"
+    url: "https://luna.amazon.com"
+    icone: "luna.svg"
+    descricao: "Jogos na nuvem Amazon Luna"
+    status: "disponível"
+    categoria: "jogos"
+
+[pack pwm-core]
+nome = "PWAs Nuvem Core"
+tier = "core"
+descricao = "PWAs de jogos na nuvem para tier Core"
+
+[apps]
+  - nome: "Xbox Cloud Gaming"
+    url: "https://xbox.com/play"
+    icone: "xbox-cloud.svg"
+    descricao: "Jogos na nuvem Xbox Cloud Gaming"
+    status: "disponível"
+    categoria: "jogos"
+
+  - nome: "Amazon Luna"
+    url: "https://luna.amazon.com"
+    icone: "luna.svg"
+    descricao: "Jogos na nuvem Amazon Luna"
+    status: "disponível"
+    categoria: "jogos"
+
+  - nome: "GeForce Now"
+    url: "https://play.geforce.com"
+    icone: "geforce-now.svg"
+    descricao: "Jogos na nuvem NVIDIA GeForce Now"
+    status: "disponível"
+    categoria: "jogos"
+
+[pack pwm-lite]
+nome = "PWAs Nuvem Lite"
+tier = "lite"
+descricao = "PWAs de jogos na nuvem para tier Lite"
+
+[apps]
+  - nome: "Amazon Luna"
+    url: "https://luna.amazon.com"
+    icone: "luna.svg"
+    descricao: "Jogos na nuvem Amazon Luna"
+    status: "disponível"
+    categoria: "jogos"
+
+  - nome: "Xbox Cloud Gaming"
+    url: "https://xbox.com/play"
+    icone: "xbox-cloud.svg"
+    descricao: "Jogos na nuvem Xbox Cloud Gaming"
+    status: "disponível"
+    categoria: "jogos"
+
+  - nome: "Google Stadia"
+    url: "https://stadia.google.com"
+    icone: "stadia.svg"
+    descricao: "Jogos na nuvem Google Stadia"
+    status: "descontinuado"
+    categoria: "jogos"
+
+[configuracao]
+  - chave: "pwa_auto_instalar"
+    valor: "true"
+    descricao: "Instalar PWAs automaticamente na inicialização"
+
+  - chave: "pwa_janela_dedicada"
+    valor: "true"
+    descricao: "Abrir PWAs em janela dedicada (modo app)"
+
+  - chave: "pwa_cache_tamanho"
+    valor: "512MB"
+    descricao: "Tamanho máximo de cache para PWAs"
