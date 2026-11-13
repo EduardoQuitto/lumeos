@@ -101,7 +101,13 @@ fases:
         - {id: t14-1, desc: "OOBE: cartao central de vidro (idioma/teclado/rede/usuario/criptografia/tier/Essenciais)", aceite: "cartao vidro central com passos sequenciais", status: feita, retry: 0}
         - {id: t14-2, desc: "Greeter/Lock: wallpaper escurecido+blur, relogio grande, avatar central, senha em pilula", aceite: "greeter funcional com login e lock screen", status: feita, retry: 0}
         - {id: t14-3, desc: "Telas Plymouth: desligar/reiniciar/Instalando atualizacao", aceite: "telas Plymouth com feedback visual", status: feita, retry: 0}}
-  - {id: 15, nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalação"}
+  - {id: 15,  nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalacao",
+     gate: {testes: ["instalador-disco-vazio-smoke", "instalador-luks-smoke", "instalador-ab-smoke", "instalador-vm-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t15-1, desc: "instalador HD: interface de instalacao em disco vazio", aceite: "tela de instalacao funcional em VM", status: fazendo, retry: 0}
+       - {id: t15-2, desc: "instalador HD: LUKS+A/B (slots A e B)", aceite: "particao LUKS com slots A e B funcionais", status: pendente, retry: 0}
+       - {id: t15-3, desc: "instalador HD: instalacao em VM teste", aceite: "instalacao completa em VM sem erros", status: pendente, retry: 0}
+       - {id: t15-4, desc: "instalador HD: teste instalacao", aceite: "teste de instalacao completa aprovado", status: pendente, retry: 0}}
   - {id: 16, nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalação"}
   - {id: 17, nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB"}
   - {id: 18, nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle ≤350MB"}
