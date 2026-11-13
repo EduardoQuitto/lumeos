@@ -121,7 +121,13 @@ fases:
        - {id: t17-2, desc: "edição Lite: shell X11 + picom", aceite: "shell X11 com picom funcionando", status: feita, retry: 0}
        - {id: t17-3, desc: "edição Lite: idle =250MB", aceite: "idle =250MB em VM Lite", status: pendente, retry: 0}
        - {id: t17-4, desc: "edição Lite: teste boot em VM", aceite: "teste de boot completo em VM aprovado", status: feita, retry: 0}}
-  - {id: 18, nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle â‰¤350MB"}
+  - {id: 18,  nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle =350MB",
+     gate: {testes: ["core-labwc-smoke", "core-quickshell-smoke", "core-materiais-smoke", "core-idle-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t18-1, desc: "edição Core amd64: shell labwc+Quickshell", aceite: "shell labwc+Quickshell funcionando", status: feita, retry: 0}
+       - {id: t18-2, desc: "edição Core: matriz materiais (Névoa + Sólido + sombras)", aceite: "materiais Névoa, Sólido e sombras funcionais", status: feita, retry: 0}
+       - {id: t18-3, desc: "edição Core: idle =350MB", aceite: "idle =350MB em VM Core", status: pendente, retry: 0}
+       - {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: feita, retry: 0}}
   - {id: 19, nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando"}
   - {id: 20, nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier"}
   - {id: 21, nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper"}
@@ -131,5 +137,7 @@ fases:
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalaÃ§Ã£o + update + seguranÃ§a + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por vocÃª"}
+
+
 
 
