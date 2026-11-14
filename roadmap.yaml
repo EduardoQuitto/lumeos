@@ -149,12 +149,20 @@ fases:
        - {id: t21-2, desc: "shield-hardening: AppArmor+seccomp", aceite: "AppArmor+seccomp ativos", status: feita, retry: 0}
        - {id: t21-3, desc: "shield-hardening: nftables+testes tamper", aceite: "nftables+testes tamper aprovados", status: feita, retry: 0}
        - {id: t21-4, desc: "shield-hardening: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
-  - {id: 22, nome: modo-cofre,               peso: 3, aceite: "microVM descartÃ¡vel abre app de risco eé”€æ¯ sem resÃ­duo"}
+  - {id: 22,  nome: modo-cofre,               peso: 3, aceite: "microVM descartavel abre app de risco e destroi sem resíduo",
+     gate: {testes: ["cofre-microvm-smoke", "cofre-app-risco-smoke", "cofre-sem-residuo-smoke", "cofre-execucao-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t22-1, desc: "modo cofre: microVM descartável", aceite: "microVM funcionando", status: feita, retry: 0
+       - {id: t22-2, desc: "modo cofre: abre app de risco", aceite: "app de risco roda na microVM", status: feita, retry: 0}
+       - {id: t22-3, desc: "modo cofre: destrói sem resíduo", aceite: "microVM destruída sem deixar resíduo", status: feita, retry: 0}
+       - {id: t22-4, desc: "modo cofre: teste execução", aceite: "teste de execução completa aprovado", status: feita, retry: 0}}
   - {id: 23, nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automÃ¡tico + teste update"}
   - {id: 24, nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido"}
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalaÃ§Ã£o + update + seguranÃ§a + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por vocÃª"}
+
+
 
 
 
