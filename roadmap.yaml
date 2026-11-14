@@ -163,10 +163,19 @@ fases:
        - {id: t23-2, desc: "update A/B: manifesto assinado (minisign) + slot inativo", aceite: "manifesto assinado e slot inativo preenchido", status: feita, retry: 0}
        - {id: t23-3, desc: "update A/B: tela de reinício + boot B + health-check 2 boots", aceite: "tela de reinício, boot B e health-check", status: feita, retry: 0}
        - {id: t23-4, desc: "update A/B: rollback automático + teste update", aceite: "rollback automático + teste de update", status: feita, retry: 0}}
-  - {id: 24, nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido"}
+  - {id: 24,  nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido",
+     gate: {testes: ["i18n-pt-smoke", "i18n-en-smoke", "a11y-orca-smoke", "a11y-alto-contraste-smoke", "a11y-movimento-reduzido-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t24-1, desc: "i18n-a11y: pt/en 100%", aceite: "pt-BR e en-US 100% traduzido", status: feita, retry: 0}
+       - {id: t24-2, desc: "i18n-a11y: Orca \+ alto contraste", aceite: "Orca screen reader \+ alto contraste funcionando", status: feita, retry: 0}
+       - {id: t24-3, desc: "i18n-a11y: movimento reduzido", aceite: "movimento reduzido configur.vel", status: feita, retry: 0}
+       - {id: t24-4, desc: "i18n-a11y: teste execução", aceite: "teste de execução completa aprovado", status: feita, retry: 0}
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalaÃ§Ã£o + update + seguranÃ§a + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por vocÃª"}
+
+
+
 
 
 
