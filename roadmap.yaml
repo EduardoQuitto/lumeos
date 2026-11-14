@@ -20,8 +20,8 @@ fases:
   - {id: 2,  nome: iso-amd64-boot,           peso: 4, aceite: "boot QEMU <20s + Plymouth Lume + screenshot",
      gate: {testes: ["iso-build-smoke", "qemu-boot-smoke"], blockers: 0, signoff: pendente},
       tarefas:
-        - {id: t2-1, desc: "estrutura iso/{plymouth,calamares,grub,hooks} + Plymouth Lume (arcos orbitais)", aceite: "Plymouth com tema Lume, tela de boot amd64", status: feita, retry: 0}
-        - {id: t2-2, desc: "build/live-build/build.sh para ISO amd64 (<1,4 GB)", aceite: "script de build da ISO como artefato para Linux", status: feita, retry: 0}
+        - {id: t2-1, desc: "estrutura iso/\{plymouth,calamares,grub,hooks\} \+ Plymouth Lume \(arcos orbitais\)", aceite: "Plymouth com tema Lume, tela de boot amd64", status: pendente, retry: 0}
+        - {id: t2-2, desc: "build/live-build/build.sh para ISO amd64 \(<1,4 GB\)", aceite: "script de build da ISO como artefato para Linux", status: pendente, retry: 0}
         - {id: t2-3, desc: "tests/qemu/smoke.sh boot QEMU <20s + screendump", aceite: "boot <20s + screenshot salvo em design/shots/2/", status: feita, retry: 0}}
   - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch",
      gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke"], blockers: 0, signoff: pendente},
@@ -117,9 +117,9 @@ fases:
   - {id: 17,  nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle =250MB",
      gate: {testes: ["lite-iso-smoke", "lite-x11-smoke", "lite-picom-smoke", "lite-idle-smoke"], blockers: 0, signoff: pendente},
      tarefas:
-       - {id: t17-1, desc: "edição Lite i386: ISO bootável i386", aceite: "ISO i386 bootável em VM", status: feita, retry: 0}
+       - {id: t17-1, desc: "edição Lite i386: ISO bootável i386", aceite: "ISO i386 bootável em VM", status: pendente, retry: 0}
        - {id: t17-2, desc: "edição Lite: shell X11 + picom", aceite: "shell X11 com picom funcionando", status: feita, retry: 0}
-       - {id: t17-3, desc: "edição Lite: idle =250MB", aceite: "idle =250MB em VM Lite", status: feita, retry: 0}
+       - {id: t25-3, desc: "edição Lite: idle =250MB", aceite: "idle =250MB em VM Lite", status: feita, retry: 0}}
        - {id: t17-4, desc: "edição Lite: teste boot em VM", aceite: "teste de boot completo em VM aprovado", status: feita, retry: 0}}
   - {id: 18,  nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle =350MB",
      gate: {testes: ["core-labwc-smoke", "core-quickshell-smoke", "core-materiais-smoke", "core-idle-smoke"], blockers: 0, signoff: pendente},
@@ -127,7 +127,7 @@ fases:
        - {id: t18-1, desc: "edição Core amd64: shell labwc+Quickshell", aceite: "shell labwc+Quickshell funcionando", status: feita, retry: 0}
        - {id: t18-2, desc: "edição Core: matriz materiais (Névoa + Sólido + sombras)", aceite: "materiais Névoa, Sólido e sombras funcionais", status: feita, retry: 0}
        - {id: t18-3, desc: "edição Core: idle =350MB", aceite: "idle =350MB em VM Core", status: feita, retry: 0}
-       - {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: feita, retry: 0}}
+       - {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM aprovado", status: pendente, retry: 0}}}
   - {id: 19,  nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando",
      gate: {testes: ["win-wine-smoke", "win-bwrap-smoke", "win-selos-smoke", "win-3apps-smoke"], blockers: 0, signoff: pendente},
      tarefas:
@@ -193,6 +193,8 @@ fases:
         - {id: t27-2, desc: "docs", aceite: "documentação completa atualizada", status: pendente, retry: 0}
         - {id: t27-3, desc: "site", aceite: "site de download publicado", status: feita, retry: 0}
         - {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}}
+
+
 
 
 

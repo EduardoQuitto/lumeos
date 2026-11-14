@@ -1,14 +1,14 @@
-#!/bin/bash
-# run-all-tests.sh - Executor de testes da fase 26 - Suíte de testes VM
-# Executa todos os testes da suíte de teste VM do Lume OS
-#
-# Testes incluídos:
+#!/usr/bin/env bash
+# tests/suite-vm/run-all-tests.sh - Executor de testes da fase 26 - Suíte de testes VM
+# Requisitos fase 26:
 #   - Matriz QEMU (virtio-gpu/qxl/i386)
 #   - Instalação em disco vazio 20 GB
-#   - Update + rollback
+#   - Update + rollback automático
 #   - Tamper verity
 #   - Escape sandbox
 #   - Screenshot diff por build
+#
+# Este script roda em VM/container Linux (não no host Windows).
 
 set -euo pipefail
 
@@ -47,7 +47,7 @@ run_qemu_matrix() {
     log_header "TESTE 1: Matriz QEMU"
 
     local arches=("amd64" "i386")
-    local gpus=("virtio-gpu" "qxl" "std")
+    local gpus=("virtio-gpu" "qxl")
 
     for arch in "${arches[@]}"; do
         for gpu in "${gpus[@]}"; do
@@ -62,7 +62,7 @@ run_qemu_matrix() {
             if [ $boot_ms -le 20000 ] || [ $boot_ms -le 30000 ]; then
                 pass "QEMU ${arch}/${gpu}: boot em ${boot_ms}ms"
             else
-                fail "QEMU ${arch}/${gpu}: boot excedeu limite (${boot_ms}ms)"
+                fail "QEMU ${arch}/${gpu}: boot excedeu ${BOOT_TIMEOUT}s"
             fi
         done
     done
@@ -74,7 +74,7 @@ run_qemu_matrix() {
 run_install_test() {
     log_header "TESTE 2: Instalação em disco vazio 20 GB"
 
-    local disk_img="/tmp/lume-test-disk.img"
+    local disk_img="${ISO_DIR}/lume-vm-disk.img"
     local iso_file="${ISO_DIR}/lume-amd64.iso"
 
     # Criar disco vazio de 20 GB
@@ -227,14 +227,14 @@ run_screenshot_diff_test() {
         if command -v convert >/dev/null 2>&1; then
             convert -size 800x600 xc:blue "$shot_file" 2>/dev/null || true
         else
-            # Criar arquivo placeholder vazio se não houver convert
+            # Criar arquivo placeholder vazio
             touch "$shot_file" 2>/dev/null || true
         fi
     fi
 
     if [ -f "$shot_file" ]; then
-        local size
-        size=$(stat -c%s "$shot_file" 2>/dev/null || echo 0)
+        local shot_size
+        shot_size=$(stat -c%s "$shot_file" 2>/dev/null || echo 0)
         if [ "$size" -gt 0 ]; then
             pass "Screenshot capturado: $(basename "$shot_file") (${size} bytes)"
         else
@@ -281,7 +281,7 @@ main() {
     # Resumo final
     log ""
     log "============================================================"
-    log "  RESUMO FINAL - FASE 26"
+    log "  RESULTADO FINAL - FASE 26"
     log "============================================================"
     log "  Testes aprovados: $PASS_COUNT"
     log "  Testes falhados: $fail_count"
