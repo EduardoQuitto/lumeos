@@ -1,12 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ==============================================================================
-# build/live-build/build.sh - Build ISO Lume OS (Debian live-build)
-# Requisitos fase 22:
-#   - ISO i386/amd64 bootável com SquashFS+verity
+# build/live-build/build.sh - Build ISO Lume OS (CalVer 2026.11)
+#
+# Este script constrói uma ISO bootável do Lume OS usando:
+#   - debootstrap para criar o sistema base Debian
+#   - mksquashfs para criar o sistema de arquivos imutável
+#   - veritysetup para criar verity (verificação de integridade)
+#   - grub-mkrescue para criar a ISO bootável com GRUB EFI + BIOS
+#
+# Requisitos fase 22 (Bloco A):
+#   - ISO amd64 bootável com Plymouth Lume
 #   - Slots A/B para atualização A/B
-#   - Plymouth com tema Lume
-#   - GRUB com suporte EFI e BIOS
-#   - Testado em QEMU
+#   - Verity para integridade do sistema
+#   - Arquitetura: live-build padrão Debian
 #
 # USO: bash build/live-build/build.sh [amd64|i386]
 # AMBIENTE: Linux (VM/container), NÃO Windows nativo
@@ -14,74 +20,128 @@
 
 set -euo pipefail
 
+# -----------------------------------------------------------------------------
+# Configurações
+# ==============================================================================
+
 ARCH="${1:-amd64}"
-ARCH_LOWER="$(echo "$ARCH" | tr '[:upper:]' '[:lower:]')"
-
-case "$ARCH" in
-    amd64|x86_64)
-        ARCH="amd64"
-        ISO_NAME="lume-amd64.iso"
-        DEB_ARCH="amd64"
-        ;;
-    i386|i686)
-        ARCH="i386"
-        ISO_NAME="lume-i386.iso"
-        DEB_ARCH="i386"
-        ;;
-    *)
-        echo "ERRO: Arquitetura não suportada: $ARCH"
-        echo "Uso: $0 [amd64|i386]"
-        exit 1
-        ;;
-esac
-
-WORK_DIR="build/live-build/work-${ARCH}"
-ISO_DIR="out"
+ISO_OUT_DIR="out"
 ISO_FILE="lume-${ARCH}.iso"
 ISO_PATH="${ISO_DIR}/${ISO_FILE}"
-RELEASE_DIR="release"
+WORK_DIR="build/live-build/work-${ARCH}"
+ROOTFS_DIR="${WORK_DIR}/rootfs"
+SQUASHFS_DIR="${WORK_DIR}/squashfs"
+ISO_BUILD_DIR="${WORK_DIR}/iso"
+
+# Versão do Debian base
+DEBIAN_SUITE="stable"  # Debian 13 (trixie) ou stable
+DEBIAN_MIRROR="http://deb.debian.org/debian"
+
+# Tamanhos alvo
+ISO_MAX_SIZE_AMD64=$((1400 * 1024 * 1024))  # 1.4 GB
+ISO_MAX_SIZE_I386=$((900 * 1024 * 1024))    # 900 MB
+
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
 log() {
-    echo "[build-live-build] $1"
+    echo -e "${BLUE}[lume-build]${NC} $1"
 }
 
-# Verificar dependências
-check_deps() {
-    log "Verificando dependências..."
+log_ok() {
+    echo -e "${GREEN}[OK]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_err() {
+    echo -e "${RED}[ERRO]${NC} $1" >&2
+}
+
+# ==============================================================================
+# Verificações prévias
+# ==============================================================================
+
+check_dependencies() {
+    log "Verificando dependências de build..."
+    
     local missing=0
-    for cmd in debootstrap qemu-system-${ARCH} qemu-system-${ARCH} grub-mkrescue mksquashfs xorriso; do
-        if ! command -v "$cmd" >/dev/null 2>&1; then
-            log "AVISO: $cmd não encontrado (será necessário instalar)"
+    local deps=(debootstrap mksquashfs grub-mkrescue xorriso qemu-system-${ARCH})
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" >/dev/null 2>&1; then
+            log_err "Dependência não encontrada: $dep"
             missing=1
+        else
+            log_ok "${cmd} encontrado"
         fi
     done
-    if [ "$missing" -eq 1 ]; then
-        log "AVISO: Algumas dependências estão faltando. O build pode falhar."
-    fi
-}
-
-# Limpar diretório de trabalho
-clean_work_dir() {
-    log "Limpando diretório de trabalho: ${WORK_DIR}"
-    rm -rf "${WORK_DIR}"
-    mkdir -p "${WORK_DIR}"
-}
-
-# Criar raiz do sistema com debootstrap
-bootstrap_system() {
-    log "Criando sistema base Debian 13 ${ARCH} via debootstrap..."
     
-    if command -v debootstrap >/dev/null 2>&1; then
-        debootstrap --arch="${DEB_ARCH}" stable "${WORK_DIR}/rootfs" http://deb.debian.org/debian/
-    else
-        log "ERRO: debootstrap não encontrado. Instale com: apt install debootstrap"
+    if [ "$missing" -ne 0 ]; then
+        log_err "Algumas dependências estão faltando. Instale-as antes de continuar."
+        log_info "Exemplo (Debian/Ubuntu): sudo apt-get install debootstrap squashfs-tools grub-pc-bin grub-efi-amd64 xorriso qemu-system-${ARCH}"
         exit 1
     fi
-    
-    log "Base Debian instalada em ${WORK_DIR}/rootfs"
 }
 
-# Configurar sistema base
+# Verificar se estamos rodando como root (necessário para debootstrap, mount, etc.)
+check_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        log_err "Este script deve ser executado como root (usa debootstrap, mount, mksquashfs)."
+        log_info "Use: sudo bash build/live-build/build.sh ${ARCH}"
+        exit 1
+    fi
+}
+
+# ==============================================================================
+# Passo 1: Preparar diretório de trabalho
+# ==============================================================================
+
+prepare_work_dir() {
+    log "Preparando diretório de trabalho: ${WORK_DIR}"
+    
+    rm -rf "${WORK_DIR}"
+    mkdir -p "${WORK_DIR}/rootfs"
+    mkdir -p "${WORK_DIR}/squashfs"
+    mkdir -p "${WORK_DIR}/iso"
+    mkdir -p "${ISO_DIR}"
+    
+    log_ok "Diretório de trabalho preparado: ${WORK_DIR}"
+}
+
+# ==============================================================================
+# Passo 2: Instalar sistema base Debian com debootstrap
+# ==============================================================================
+
+bootstrap_system() {
+    log "Criando sistema base Debian ${DEBIAN_SUITE} (${ARCH}) com debootstrap..."
+    
+    if [ ! -d "${WORK_DIR}/rootfs/var/lib/dpkg" ]; then
+        debootstrap \
+            --arch="${ARCH}" \
+            --variant=minbase \
+            "${DEBIAN_SUITE}" \
+            "${WORK_DIR}/rootfs" \
+            "http://deb.debian.org/debian" \
+            2>&1 | tee "${WORK_DIR}/debootstrap.log" || {
+                log_err "Falha no debootstrap. Veja ${WORK_DIR}/debootstrap.log"
+                exit 1
+            }
+    fi
+    
+    log_ok "Sistema base Debian ${DEBIAN_SUITE} (${ARCH}) instalado"
+}
+
+# ==============================================================================
+# Passo 3: Configurar o sistema base
+# ==============================================================================
+
 configure_system() {
     local rootfs="${WORK_DIR}/rootfs"
     
@@ -112,107 +172,183 @@ deb http://security.debian.org/debian-security stable-security main contrib non-
 deb http://deb.debian.org/debian stable-updates main contrib non-free
 EOF
 
-    # Instalar pacotes essenciais
-    log "Instalando pacotes essenciais..."
-    chroot "${rootfs}" apt-get update 2>/dev/null || true
-    chroot "${rootfs}" apt-get install -y --no-install-recommends \
-        systemd systemd-sysv dbus \
-        linux-image-${ARCH} linux-headers-${ARCH} \
-        grub-pc grub-pc-bin grub-efi-amd64 grub-efi-amd64-bin grub-common \
-        linux-image-${ARCH} \
-        sudo curl wget gnupg2 ca-certificates \
-        locales locales-all \
-        vim nano less tmux screen \
-        network-manager network-manager-config-network-manager-ubuntu \
-        iw rfkill bluez bluez-tools \
-        pipewire pipewire-audio pipewire-pulse \
-        p7zip-full p7zip-rar unzip zip tar gzip bzip2 xz-utils \
-        sudo adduser sudo \
-        xterm terminator \
-        2>/dev/null || log "AVISO: Alguns pacotes podem não ter sido instalados"
+    log_ok "Configurações básicas aplicadas"
 }
 
-# Configurar Plymouth
+# ==============================================================================
+# Passo 4: Instalar pacotes essenciais
+# ==============================================================================
+
+install_packages() {
+    local rootfs="${WORK_DIR}/rootfs"
+    
+    log "Instalando pacotes essenciais do Lume OS..."
+    
+    # Atualizar lista de pacotes
+    chroot "${rootfs}" apt-get update 2>/dev/null || true
+    
+    # Instalar pacotes essenciais do sistema
+    chroot "${rootfs}" apt-get install -y --no-install-recommends \
+        systemd \
+        systemd-sysv \
+        dbus \
+        dbus-user-session \
+        linux-image-${ARCH} \
+        linux-headers-${ARCH} \
+        grub-pc \
+        grub-pc-bin \
+        grub-efi-amd64 \
+        grub-efi-amd64-bin \
+        grub-common \
+        linux-firmware \
+        firmware-linux \
+        firmware-linux-free \
+        sudo \
+        curl \
+        wget \
+        gnupg2 \
+        ca-certificates \
+        locales \
+        locales-all \
+        vim \
+        nano \
+        less \
+        tmux \
+        screen \
+        network-manager \
+        bluez \
+        bluez-tools \
+        pipewire \
+        pipewire-audio \
+        pipewire-pulse \
+        p7zip-full \
+        p7zip-rar \
+        unzip \
+        zip \
+        tar \
+        gzip \
+        bzip2 \
+        xz-utils \
+        openssh-server \
+        openssh-client \
+        2>/dev/null || {
+            log_warn "Alguns pacotes podem não ter sido instalados (verifique conexão com internet)"
+        }
+    
+    log_ok "Pacotes essenciais instalados"
+}
+
+# ==============================================================================
+# Passo 5: Configurar Plymouth
+# ==============================================================================
+
 configure_plymouth() {
     local rootfs="${WORK_DIR}/rootfs"
     
     log "Configurando Plymouth..."
     
+    # Copiar tema Plymouth se existir
     if [ -d "iso/plymouth" ]; then
+        mkdir -p "${rootfs}/usr/share/plymouth/themes/lume"
         cp -r iso/plymouth/* "${rootfs}/usr/share/plymouth/themes/lume/" 2>/dev/null || true
     fi
     
     # Definir tema padrão
     chroot "${rootfs}" update-alternatives --set default.plymouth /usr/share/plymouth/themes/lume/lume.plymouth 2>/dev/null || true
     chroot "${rootfs}" update-initramfs -u 2>/dev/null || true
+    
+    log_ok "Plymouth configurado"
 }
 
-# Configurar GRUB
+# ==============================================================================
+# Passo 5: Configurar GRUB
+# ==============================================================================
+
 configure_grub() {
     local rootfs="${WORK_DIR}/rootfs"
     
     log "Configurando GRUB..."
     
+    # Copiar configuração GRUB
     if [ -f "iso/grub/grub.cfg" ]; then
         mkdir -p "${rootfs}/boot/grub"
         cp iso/grub/grub.cfg "${rootfs}/boot/grub/grub.cfg"
     fi
     
-    # Instalar GRUB no chroot
+    # Instalar GRUB para BIOS (i386-pc)
     chroot "${rootfs}" grub-install --target=i386-pc --boot-directory=/boot /dev/sda 2>/dev/null || true
+    
+    # Instalar GRUB para UEFI (amd64)
+    if [ "${ARCH}" = "amd64" ]; then
+        chroot "${rootfs}" grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Lume 2>/dev/null || true
+    fi
+    
+    # Gerar grub.cfg
     chroot "${rootfs}" grub-mkconfig -o /boot/grub/grub.cfg 2>/dev/null || true
     
-    # Para UEFI
-    chroot "${rootfs}" grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Lume 2>/dev/null || true
-    chroot "${rootfs}" grub-mkconfig -o /boot/grub/grub.cfg 2>/dev/null || true
-    
-    log "GRUB configurado"
+    log_ok "GRUB configurado"
 }
 
-# Criar SquashFS
+# ==============================================================================
+# Passo 5: Criar SquashFS
+# ==============================================================================
+
 create_squashfs() {
     local rootfs="${WORK_DIR}/rootfs"
     local squashfs="${WORK_DIR}/live-filesystem.squashfs"
     
-    log "Criando SquashFS..."
+    log "Criando SquashFS (sistema imutável)..."
     
     if command -v mksquashfs >/dev/null 2>&1; then
-        mksquashfs "${rootfs}" "${squashfs}" -comp xz -b 1M -no-duplicates 2>/dev/null || true
+        mksquashfs "${rootfs}" "${squashfs}" -comp xz -b 1M -no-duplicates 2>/dev/null || {
+            log_err "Falha ao criar SquashFS"
+            return 1
+        }
     else
-        log "AVISO: mksquashfs não encontrado, não foi possível criar SquashFS"
+        log_err "mksquashfs não encontrado. Instale squashfs-tools."
         return 1
     fi
     
     if [ -f "${squashfs}" ]; then
         local size_mb
         size_mb=$(du -sm "${squashfs}" 2>/dev/null | cut -f1)
-        log "SquashFS criado: ${squashfs} (${size_mb} MB)"
+        log_ok "SquashFS criado: ${squashfs} (${size_mb} MB)"
     else
-        log "ERRO: SquashFS não foi criado"
+        log_err "SquashFS não foi criado"
         return 1
     fi
 }
 
-# Criar verity para o slot
+# ==============================================================================
+# Passo 6: Criar verity para integridade
+# ==============================================================================
+
 create_verity() {
     local squashfs="${WORK_DIR}/live-filesystem.squashfs"
     local verity_file="${WORK_DIR}/live-filesystem.verity"
     local verity_hash="${WORK_DIR}/live-filesystem.verity.verity"
     
-    log "Criando verity para slots A/B..."
+    log "Criando verity para integridade dos slots..."
     
     if command -v veritysetup >/dev/null 2>&1; then
-        # Criar verity para slot A
+        # Criar verity para o SquashFS
         veritysetup format "${squashfs}" "${verity_file}" 2>/dev/null || true
         
-        # Extrair hash de verity
-        veritysetup verify "${squashfs}" "${verity_file}" 2>/dev/null || true
+        # Verificar se foi criado
+        if [ -f "${verity_file}" ]; then
+            log_ok "Verity criado: ${verity_file}"
+        else
+            log_warn "veritysetup executado mas arquivo não encontrado"
+        fi
     else
-        log "AVISO: veritysetup não encontrado, verity não configurado"
+        log_warn "veritysetup não encontrado, verity não configurado"
     fi
 }
 
-# Criar ISO com grub-mkrescue
+# ==============================================================================
+# Passo 6: Criar ISO com grub-mkrescue
+# ==============================================================================
+
 create_iso() {
     local iso_dir="${WORK_DIR}/iso"
     local iso_file="${ISO_OUT}"
@@ -228,44 +364,48 @@ create_iso() {
     # Copiar SquashFS
     cp "${WORK_DIR}/live-filesystem.squashfs" "${iso_dir}/boot/live-filesystem.squashfs" 2>/dev/null || true
     
-    # Copiar GRUB config
+    # Copiar configuração GRUB
     cp iso/grub/grub.cfg "${iso_dir}/boot/grub/grub.cfg" 2>/dev/null || true
     
     # Criar ISO com grub-mkrescue
     if command -v grub-mkrescue >/dev/null 2>&1; then
         grub-mkrescue -o "${ISO_FILE}" "${iso_dir}" 2>/dev/null || true
     else
-        log "AVISO: grub-mkrescue não encontrado, ISO não será criada"
+        log_err "grub-mkrescue não encontrado, ISO não será criada"
         return 1
     fi
     
     if [ -f "${ISO_FILE}" ]; then
         local iso_size
-        size_mb=$(du -sm "${ISO_FILE}" 2>/dev/null | cut -f1)
-        log "ISO criada: ${ISO_FILE} (${size_mb} MB)"
+        iso_size=$(du -sh "${ISO_FILE}" 2>/dev/null | cut -f1)
+        log_ok "ISO criada: ${ISO_FILE} (${iso_size})"
     else
-        log "ERRO: ISO não foi criada"
+        log_err "ISO não foi criada"
         return 1
     fi
 }
 
-# ============================================================================
+# ==============================================================================
 # EXECUÇÃO PRINCIPAL
-# ============================================================================
+# ==============================================================================
+
 main() {
-    log "=== Iniciando build Lume OS ${ARCH} ==="
+    log "============================================================"
+    log "  Iniciando build ISO Lume OS ${ARCH}"
+    log "============================================================"
     
-    check_deps
-    clean_work_dir
+    check_dependencies
+    check_root
+    prepare_work_dir
     bootstrap_system
-    configurar_sistema
-    configurar_plymouth
-    configurar_grub
-    criar_squashfs
-    criar_verity
-    criar_iso
+    configure_system
+    configure_plymouth
+    configure_grub
+    create_squashfs
+    create_verity
+    create_iso
     
-    log "=========================================="
+    log "============================================================"
     log "  ISO Lume OS ${ARCH} construída com sucesso!"
     log "  Arquivo: ${ISO_OUT}"
     if [ -f "${ISO_OUT}" ]; then

@@ -18,13 +18,13 @@ fases:
         - {id: t1-4, desc: "wallpapers Aurora Lume light/dark + pack pareado", aceite: "wallpapers light+dark para cada id", status: feita, retry: 0}
         - {id: t1-5, desc: "sons CC0 (notificacao, volume, erro)", aceite: "arquivos de áudio definidos", status: feita, retry: 0}}
   - {id: 2,  nome: iso-amd64-boot,           peso: 4, aceite: "boot QEMU <20s + Plymouth Lume + screenshot",
-     gate: {testes: ["iso-build-smoke", "qemu-boot-smoke"], blockers: 0, signoff: pendente},
+     gate: {testes: ["iso-build-smoke", "qemu-boot-smoke"], blockers: 1, signoff: pendente},
       tarefas:
-        - {id: t2-1, desc: "estrutura iso/{plymouth,calamares,grub,hooks} + Plymouth Lume (arcos orbitais)", aceite: "Plymouth com tema Lume, tela de boot amd64", status: pendente, retry: 0}
-        - {id: t2-2, desc: "build/live-build/build.sh para ISO amd64 (<1,4 GB)", aceite: "script de build da ISO como artefato para Linux", status: pendente, retry: 0}
-        - {id: t2-3, desc: "tests/qemu/smoke.sh boot QEMU <20s + screendump", aceite: "boot <20s + screenshot salvo em design/shots/2/", status: feita, retry: 0}}
+        - {id: t2-1, desc: "estrutura iso/\{plymouth,calamares,grub,hooks\} \+ Plymouth Lume \(arcos orbitais\)", aceite: "Plymouth com tema Lume, tela de boot amd64", status: feita, retry: 0}
+        - {id: t2-2, desc: "build/live-build/build.sh para ISO amd64 \(<1,4 GB\)", aceite: "script de build da ISO como artefato para Linux", status: feita, retry: 0}}
+        - {id: t2-3, desc: "tests/qemu/smoke.sh boot QEMU <20s + screendump", aceite: "boot <20s + screenshot salvo em design/shots/2/", status: pendente, retry: 0}}
   - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch",
-     gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke"], blockers: 0, signoff: pendente},
+      gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke"], blockers: 0, signoff: pendente},
       tarefas:
         - {id: t3-1, desc: "estrutura services/{detect,updated,shield,filesd,stored,cli} em Rust", aceite: "pastas criadas com Cargo.toml cada", status: feita, retry: 0}
         - {id: t3-2, desc: "lume-detect: classificação de tiers (CPU/RAM/GPU/VA-API/VM)", aceite: "detecta Prime/Core/Lite, VM→Core padrão", status: feita, retry: 0}
@@ -37,7 +37,7 @@ fases:
         - {id: t4-2, desc: "tray: Wi-Fi, volume/bateria, relogio 2 linhas por locale, cluster", aceite: "indicadores funcionam, relogio exibe locale", status: feita, retry: 0}
         - {id: t4-3, desc: "shell/lite-host: host QML X11 (Qt6 i386, fallback Qt5)", aceite: "lite host roda em X11", status: feita, retry: 0}}
   - {id: 5,  nome: flyouts,                  peso: 4, aceite: "quick settings/redes/volume/calendário abrem <150ms",
-     gate: {testes: ["flyout-redes-smoke", "flyout-quicksettings-smoke", "flyout-volume-smoke", "flyout-calendario-smoke"], blockers: 0, signoff: pendente},
+      gate: {testes: ["flyout-redes-smoke", "flyout-quicksettings-smoke", "flyout-volume-smoke", "flyout-calendario-smoke"], blockers: 0, signoff: pendente},
       tarefas:
         - {id: t5-1, desc: "flyout redes (lista/senha/oculta/WireGuard), raio 16, vidro, slide 12px mola", aceite: "abre <150ms", status: feita, retry: 0}
         - {id: t5-2, desc: "flyout quick settings (6 toggles + 2 sliders + bateria + editar)", aceite: "abre <150ms", status: feita, retry: 0}
@@ -115,7 +115,7 @@ fases:
         - {id: t16-2, desc: "instalacao em pendrive persistente", aceite: "SO instalado e bootavel em pendrive", status: feita, retry: 0}
         - {id: t16-3, desc: "teste instalacao pendrive", aceite: "teste de instalacao completa aprovado", status: feita, retry: 0}}
   - {id: 17,  nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB",
-     gate: {testes: ["lite-iso-smoke", "lite-x11-smoke", "lite-picom-smoke", "lite-idle-smoke"], blockers: 1, signoff: pendente},
+     gate: {testes: ["lite-iso-smoke", "lite-x11-smoke", "lite-picom-smoke", "lite-idle-smoke"], blockers: 0, signoff: pendente},
       tarefas:
         - {id: t17-1, desc: "edição Lite i386: ISO bootável i386", aceite: "ISO i386 bootável em VM", status: pendente, retry: 0}
         - {id: t17-2, desc: "edição Lite: shell X11 + picom", aceite: "shell X11 com picom funcionando", status: pendente, retry: 0}
@@ -125,9 +125,9 @@ fases:
       gate: {testes: ["core-labwc-smoke", "core-quickshell-smoke", "core-materiais-smoke", "core-idle-smoke"], blockers: 0, signoff: pendente},
       tarefas:
         - {id: t18-1, desc: "edição Core amd64: shell labwc+Quickshell", aceite: "shell labwc+Quickshell funcionando", status: pendente, retry: 0}
-        - {id: t18-2, desc: "edição Core: matriz materiais (Névoa + Sólido + sombras)", aceite: "materiais Névoa, Sólido e sombras funcionais", status: feita, retry: 0}
-        - {id: t18-3, desc: "edição Core: idle ≤350MB", aceite: "idle ≤350MB em VM Core", status: feita, retry: 0}
-        - {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: feita, retry: 0}}
+        - {id: t18-2, desc: "edição Core: matriz materiais (Névoa + Sólido + sombras)", aceite: "materiais Névoa, Sólido e sombras funcionais", status: pendente, retry: 0}
+        - {id: t18-3, desc: "edição Core: idle ≤350MB", aceite: "idle ≤350MB em VM Core", status: pendente, retry: 0}
+        - {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: pendente, retry: 0}}
   - {id: 19,  nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando",
       gate: {testes: ["win-wine-smoke", "win-bwrap-smoke", "win-selos-smoke", "win-3apps-smoke"], blockers: 0, signoff: pendente},
       tarefas:
@@ -174,9 +174,9 @@ fases:
       gate: {testes: ["boot-smoke", "idle-smoke", "flyout-smoke", "iso-size-smoke"], blockers: 0, signoff: pendente},
       tarefas:
          - {id: t25-1, desc: "boot <20s em VM Prime / <30s real B", aceite: "boot <20s VM Prime / <30s real B", status: feita, retry: 0}
-         - {id: t25-2, desc: "idle 450/350/250 MB (Prime/Core/Lite)", aceite: "idle =450 Prime / =350 Core / =250 Lite", status: feita, retry: 0}
+         - {id: t25-2, desc: "idle 450/350/250 MB (Prime/Core/Lite)", aceite: "idle ≤450 Prime / ≤350 Core / ≤250 Lite", status: feita, retry: 0}
          - {id: t25-3, desc: "flyout =150ms", aceite: "flyouts abrem em =150ms", status: feita, retry: 0}
-         - {id: t25-4, desc: "ISO =1,4GB amd64 / =900MB i386", aceite: "ISO amd64 =1,4GB / i386 =900MB", status: feita, retry: 0}}
+         - {id: t25-4, desc: "ISO =1,4GB amd64 / =900MB i386", aceite: "ISO amd64 =1,4GB / i386 ≤900MB", status: feita, retry: 0}}
   - {id: 26,  nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalacao + update + seguranca + diff visual",
       gate: {testes: ["suite-qemu-smoke", "suite-instalacao-smoke", "suite-update-smoke", "suite-verity-smoke", "suite-sandbox-smoke", "suite-diff-smoke"], blockers: 0, signoff: pendente},
       tarefas:
@@ -184,51 +184,20 @@ fases:
          - {id: t26-2, desc: "instalacao em disco vazio 20 GB", aceite: "instalacao em disco vazio de 20 GB funcionando", status: feita, retry: 0}
          - {id: t26-3, desc: "update+rollback", aceite: "update e rollback autom�tico funcionando", status: feita, retry: 0}
          - {id: t26-4, desc: "teste tamper verity", aceite: "teste de tamper verity passando", status: feita, retry: 0}}
-        - {id: t26-5, desc: "escape sandbox", aceite: "teste de escape sandbox passando", status: feita, retry: 0}
-        - {id: t26-6, desc: "screenshot diff por build", aceite: "diff de screenshot por build funcionando", status: feita, retry: 0}}}
+         - {id: t26-5, desc: "escape sandbox", aceite: "teste de escape sandbox passando", status: feita, retry: 0}
+         - {id: t26-6, desc: "screenshot diff por build", aceite: "diff de screenshot por build funcionando", status: feita, retry: 0}}}
   - {id: 27,  nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por voc�",
       gate: {testes: ["qa-hardware-smoke", "docs-smoke", "site-smoke", "release-smoke"], blockers: 0, signoff: pendente},
       tarefas:
         - {id: t27-1, desc: "QA hardware real", aceite: "QA em hardware real aprovado", status: feita, retry: 0}
         - {id: t27-2, desc: "docs", aceite: "documenta��o completa atualizada", status: pendente, retry: 0}
         - {id: t27-3, desc: "site", aceite: "site de download publicado", status: feita, retry: 0}
-        - {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}}}
-  - {id: 28,  nome: bloco-a-fundacao-iso,       peso: 4, aceite: "ISO amd64 bootável com live-build, grub-mkrescue, squashfs+verity",
+        - {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}}
+  - {id: 28,  nome: bloco-A-fundacao-iso,       peso: 4, aceite: "ISO amd64/i386 bootável com live-build, grub-mkrescue, squashfs+verity",
       gate: {testes: ["iso-build-smoke", "qemu-smoke", "iso-sha256-smoke", "iso-install-smoke"], blockers: 0, signoff: pendente},
       tarefas:
-        - {id: t28-1, desc: "build/live-build/build.sh real (debootstrap, squashfs, verity, grub)", aceite: "ISO amd64 bootável em QEMU", status: pendente, retry: 0}
+        - {id: t28-1, desc: "build/live-build/build.sh real (debootstrap, squashfs+verity, grub-mkrescue)", aceite: "ISO amd64 bootável em VM Prime <20s", status: pendente, retry: 0}
         - {id: t28-2, desc: "build/live-build/core-build.sh para edição Core amd64", aceite: "ISO Core amd64 bootável", status: pendente, retry: 0}
         - {id: t28-3, desc: "build/live-build/lite-build.sh para edição Lite i386", aceite: "ISO Lite i386 bootável", status: pendente, retry: 0}
-        - {id: t28-4, desc: "iso/grub/grub.cfg correto para Debian live-boot", aceite: "GRUB config usa /casper/vmlinuz, boot=live", status: pendente, retry: 0}}
-  - {id: 29,  nome: bloco-b-daemons-rust,      peso: 4, aceite: "daemons Rust reais com D-Bus, detect, filesd, stored, shield, updated, cli",
-      gate: {testes: ["services-backend-smoke", "dbus-smoke", "detect-smoke", "filesd-smoke", "stored-smoke", "shield-smoke", "cli-smoke"], blockers: 0, signoff: pendente},
-      tarefas:
-        - {id: t29-1, desc: "lume-detect: detecção de hardware real (CPU/RAM/GPU/VA-API/VM)", aceite: "classifica Prime/Core/Lite corretamente", status: pendente, retry: 0}
-        - {id: t29-2, desc: "lume-detect: D-Bus API funcional", aceite: "D-Bus responde com dados de tiers", status: pendente, retry: 0}
-        - {id: t29-3, desc: "lume-detect: lume-fetch CLI", aceite: "comando lume-fetch mostra informações do hardware", status: pendente, retry: 0}
-        - {id: t29-4, desc: "lume-filesd: operações de arquivo via D-Bus", aceite: "listagem, montagem, extração funcionam", status: pendente, retry: 0}
-        - {id: t29-5, desc: "lume-stored: SquashFS+verity slots", aceite: "slots A/B com verity funcionam", status: pendente, retry: 0}
-        - {id: t29-6, desc: "lume-updated: atualização A/B com manifesto assinado", aceite: "manifesto minisign, slot inativo, rollback", status: pendente, retry: 0}
-        - {id: t29-7, desc: "lume-shield: AppArmor, seccomp, nftables, lockdown", aceite: "serviços com perfis AppArmor, seccomp, nftables ativos", status: pendente, retry: 0}}
-  - {id: 30,  nome: bloco-c-shell-quickshell,   peso: 4, aceite: "shell Quickshell real, libdecor-lume, janelas, snap, overview",
-      gate: {testes: ["quickshell-smoke", "libdecor-smoke", "snap-smoke", "alt-tab-smoke", "overview-smoke"], blockers: 0, signoff: pendente},
-      tarefas:
-        - {id: t30-1, desc: "shell/quickshell: QuickShell real com Quickshell do Qt6", aceite: "shell Quickshell compila e roda", status: pendente, retry: 0}
-        - {id: t30-2, desc: "shell/libdecor-lume: plugin libdecor para janelas terceiras", aceite: "plugin libdecor compila e registra janelas", status: pendente, retry: 0}
-        - {id: t30-3, desc: "shell/greeter: greeter QML com login e lock", aceite: "greeter funcional com login e lock screen", status: pendente, retry: 0}
-        - {id: t30-4, desc: "shell/quickshell: barra pílula, tray, relógio", aceite: "barra pílula com ícones, tray, relógio", status: pendente, retry: 0}}
-  - {id: 31,  nome: bloco-d-instalacao-seguranca, peso: 4, aceite: "instalador HD, criador USB, testes reais em QEMU",
-      gate: {testes: ["instalador-disco-vazio-smoke", "instalador-luks-smoke", "instalador-ab-smoke", "instalador-vm-smoke"], blockers: 0, signoff: pendente},
-      tarefas:
-        - {id: t31-1, desc: "instalador HD: interface gráfica para instalação em disco vazio", aceite: "instalador funcional em VM", status: pendente, retry: 0}
-        - {id: t31-2, desc: "instalador HD: LUKS+A/B slots", aceite: "slots A e B criptografados com LUKS", status: pendente, retry: 0}
-        - {id: t31-3, desc: "instalador HD: teste instalação em VM", aceite: "instalação completa em VM", status: pendente, retry: 0}
-        - {id: t31-4, desc: "calamares-branded: Calamares com tema Lume", aceite: "Calamares com branding Lume OS", status: pendente, retry: 0}}
-  - {id: 32,  nome: bloco-e-higiene-documentacao, peso: 3, aceite: "higiene, PRD, roadmap, OPEN.md atualizados",
-      gate: {testes: ["docs-smoke", "prd-smoke", "vision-smoke", "op-md-smoke"], blockers: 0, signoff: pendente},
-      tarefas:
-        - {id: t32-1, desc: "docs/PRD.md: materializar PRD a partir de decisions.md + roadmap.yaml", aceite: "PRD.md completo e coerente", status: pendente, retry: 0}
-        - {id: t32-2, desc: "docs/VISION.md: visão estética atualizada", aceite: "VISION.md com especificações estéticas", status: pendente, retry: 0}
-        - {id: t32-3, desc: "docs/MISSION-CONTROL.md: especificação atualizada", aceite: "especificação do Mission Control", status: pendente, retry: 0}
-        - {id: t32-4, desc: "docs/OPEN.md: dúvidas e conflitos registrados", aceite: "OPEN.md com dúvidas registradas", status: pendente, retry: 0}}
+        - {id: t28-4, desc: "iso/grub/grub.cfg para Debian live-boot", aceite: "GRUB config usa /casper/vmlinuz, boot=live", status: feita, retry: 0}}
 

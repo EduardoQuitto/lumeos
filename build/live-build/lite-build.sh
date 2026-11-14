@@ -10,7 +10,6 @@ set -euo pipefail
 ARCH="i386"
 ISO_DIR="out"
 ISO_FILE="lume-i386.iso"
-ISO_PATH="${ISO_DIR}/${ISO_FILE}"
 
 log() {
     echo "[lite-build] $1"

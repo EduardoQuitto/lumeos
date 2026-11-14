@@ -1,13 +1,15 @@
 #!/bin/bash
 # build/live-build/core-build.sh - Build ISO amd64 Core para Lume OS
-# Baseado em build.sh com configurações específicas para edição Core
+# Requisitos fase 18:
+#   - shell labwc+Quickshell
+#   - matriz materiais (Névoa + Sólido + sombras)
+#   - idle ≤350MB
 
 set -euo pipefail
 
 ARCH="amd64"
 ISO_DIR="out"
 ISO_FILE="lume-amd64.iso"
-ISO_PATH="${ISO_DIR}/${ISO_FILE}"
 
 log() {
     echo "[core-build] $1"

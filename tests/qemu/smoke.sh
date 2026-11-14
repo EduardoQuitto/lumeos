@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# tests/qemu/smoke.sh - CI QEMU smoke test para Lume OS ISO
+# tests/qemu/smoke.sh - CI QEMU smoke test para Lume OS ISO amd64/i386
 # Requisitos fase 26:
-#   - boot QEMU <20s em VM Prime / <30s em VM real
+#   - boot QEMU <20s em VM Prime / <30s em VM real B
 #   - screendump QMP salvo em design/shots/2/
 #   - Executa em VM/container Linux (não no host Windows)
 
@@ -72,9 +72,9 @@ qmp_exec() {
 
 aguardar_boot() {
     local inicio=$(date +%s)
-    local limite=${BOOT_TIMEOUT:-60}  # 60 segundos timeout
+    local agora decorrido
 
-    echo "Aguardando boot QEMU (limite ${limite}s)..."
+    echo "Aguardando boot QEMU (limite ${BOOT_TIMEOUT}s)..."
 
     while true; do
         if ! kill -0 "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null; then
@@ -82,8 +82,8 @@ aguardar_boot() {
             return 1
         fi
 
-        local agora=$(date +%s)
-        local decorrido=$((agora - inicio))
+        agora=$(date +%s)
+        decorrido=$((agora - inicio))
 
         if [ "$decorrido" -ge "$limite" ]; then
             echo "ERRO: Boot excedeu ${limite}s"
