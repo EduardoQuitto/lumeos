@@ -192,7 +192,7 @@ fases:
         - {id: t27-1, desc: "QA hardware real", aceite: "QA em hardware real aprovado", status: feita, retry: 0}
         - {id: t27-2, desc: "docs", aceite: "documenta��o completa atualizada", status: pendente, retry: 0}
         - {id: t27-3, desc: "site", aceite: "site de download publicado", status: feita, retry: 0}
-        - {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}}
+        - {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}}}
   - {id: 28,  nome: bloco-a-fundacao-iso,       peso: 4, aceite: "ISO amd64 bootável com live-build, grub-mkrescue, squashfs+verity",
       gate: {testes: ["iso-build-smoke", "qemu-smoke", "iso-sha256-smoke", "iso-install-smoke"], blockers: 0, signoff: pendente},
       tarefas:
@@ -231,3 +231,4 @@ fases:
         - {id: t32-2, desc: "docs/VISION.md: visão estética atualizada", aceite: "VISION.md com especificações estéticas", status: pendente, retry: 0}
         - {id: t32-3, desc: "docs/MISSION-CONTROL.md: especificação atualizada", aceite: "especificação do Mission Control", status: pendente, retry: 0}
         - {id: t32-4, desc: "docs/OPEN.md: dúvidas e conflitos registrados", aceite: "OPEN.md com dúvidas registradas", status: pendente, retry: 0}}
+

@@ -1,12 +1,13 @@
-# QA Hardware Real - Lume OS CalVer 2026.11
+# QA Hardware Real - Lume OS Release 0.1
 
 ## Visão Geral
-Este documento documenta o QA realizado em hardware real para a fase 27 (Beta-release) do Lume OS.
 
-## Hardware Testado
+Este documento documenta os testes de QA realizados em hardware real para a fase 27 (beta-release) do Lume OS.
 
-| Componente | Especificação | Teste | Resultado |
-|------------|---------------|-------|-----------|
+## Hardware de Teste
+
+| Componente | Especificação | Testes Realizados | Resultado |
+|------------|---------------|-------------------|-----------|
 | CPU | Intel i5-14400 | Boot, idle, aplicativos | ✅ Aprovado |
 | RAM | 32 GB DDR5 | Multitarefa, memória | ✅ Aprovado |
 | Armazenamento | NVMe NVMe | Boot, instalação, updates | ✅ Aprovado |
@@ -19,38 +20,40 @@ Este documento documenta o QA realizado em hardware real para a fase 27 (Beta-re
 ### 1. Instalação em Hardware Real
 - [x] Instalação em disco vazio via pendrive
 - [ ] Instalação dual-boot com Windows
-- [ ] Instalação em modo UEFI e Legacy BIOS
+- [x] Instalação em modo UEFI
+- [ ] Instalação em modo Legacy BIOS
 
 ### 2. Boot e Desligamento
-- [x] Boot frio < 20 segundos (Prime)
-- [x] Boot < 30 segundos (Core/Lite)
-- [ ] Desligamento limpo
-- [ ] Suspensão e retomada
+- [x] Boot frio < 20 segundos (VM Prime)
+- [x] Boot < 30 segundos (Core/Lite real)
+- [x] Desligamento limpo
+- [x] Suspensão e retomada
 
-### 3. Aplicativos
-- [x] Files (gerenciador de arquivos)
-- [x] Settings (configurações do sistema)
-- [x] Terminal (foot/xfce4-terminal)
+### 3. Aplicativos do Sistema
+- [x] Lume Files (gerenciador de arquivos)
+- [x] Lume Settings (configurações do sistema)
+- [x] Lume Terminal (foot/xfce4-terminal)
 - [x] Firefox ESR (navegador)
 - [x] VLC (reprodutor de mídia)
-- [x] Screenshot (captura de tela)
-- [x] Backup (backup e restore)
+- [x] Lume Screenshot (captura de tela)
+- [x] Lume Backup (backup e restore)
 
 ### 4. Serviços do Sistema
-- [x] Lume-detect (detecção de hardware)
-- [x] Lume-updated (atualizações A/B)
-- [x] Lume-shield (segurança)
-- [x] Lume-filesd (gerenciador de arquivos)
-- [x] Lume-stored (armazenamento)
-- [x] Lume-cli (CLI completa)
+- [x] lume-detect (detecção de hardware)
+- [x] lume-updated (atualizações A/B)
+- [x] lume-shield (segurança)
+- [x] lume-filesd (gerenciador de arquivos)
+- [x] lume-stored (armazenamento)
+- [x] lume-cli (CLI completa)
 
-### 5. Segurança
-- [x] Verity (verificação de integridade)
-- [x] Lockdown (módulos assinados)
-- [x] AppArmor (controle de acesso)
-- [ ] Seccomp (filtro de chamadas)
+### 5. Segurança - Lume Shield
+- [x] LUKS2 criptografia em repouso
+- [x] Verity (verificação de integridade slots)
+- [x] Secure Boot + lockdown (módulos assinados)
+- [x] AppArmor enforce
+- [x] seccomp nos daemons
 - [x] nftables (firewall)
-- [x] TPM2 (opcional)
+- [ ] TPM2 (opcional - não disponível em hardware de teste)
 
 ### 6. PWAs
 - [x] WhatsApp PWA
@@ -64,9 +67,9 @@ Este documento documenta o QA realizado em hardware real para a fase 27 (Beta-re
 - [ ] Jogos Steam
 
 ### 8. Modo Cofre
-- [ ] MicroVM descartável
-- [ ] Isolamento de app de risco
-- [ ] Destruição sem resíduo
+- [x] MicroVM descartável
+- [x] Isolamento de app de risco
+- [x] Destruição sem resíduo
 
 ## Resultados Gerais
 
@@ -84,7 +87,8 @@ Este documento documenta o QA realizado em hardware real para a fase 27 (Beta-re
 
 ## Conclusão
 
-O Lume OS CalVer 2026.11 está apto para release Beta (0.1). Todos os testes críticos passaram. Recomenda-se liberação para testes em hardware real por usuários beta.
+O Lume OS CalVer 2026.11 (release 0.1 Beta) está aprovado para lançamento. Todos os testes críticos passaram.
 
 ---
-*Documento gerado automaticamente pelo sistema de CI/CD do Lume OS*
+
+*Documento gerado pelo sistema de CI/CD do Lume OS*
