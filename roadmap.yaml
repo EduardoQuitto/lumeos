@@ -174,11 +174,24 @@ fases:
      gate: {testes: ["boot-smoke", "idle-smoke", "flyout-smoke", "iso-size-smoke"], blockers: 0, signoff: pendente},
      tarefas:
         - {id: t25-1, desc: "boot <20s em VM Prime / <30s real B", aceite: "boot <20s VM Prime / <30s real B", status: feita, retry: 0}
-        - {id: t25-2, desc: "idle 450/350/250 MB (Prime/Core/Lite)", aceite: "idle =450 Prime / =350 Core / =250 Lite", status: pendente, retry: 0}
-        - {id: t25-3, desc: "flyout =150ms", aceite: "flyouts abrem em =150ms", status: pendente, retry: 0}
-        - {id: t25-4, desc: "ISO =1,4GB amd64 / =900MB i386", aceite: "ISO amd64 =1,4GB / i386 =900MB", status: pendente, retry: 0}}
-  - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalação + update + segurança + diff visual"}
+        - {id: t25-2, desc: "idle 450/350/250 MB (Prime/Core/Lite)", aceite: "idle =450 Prime / =350 Core / =250 Lite", status: feita, retry: 0}
+        - {id: t25-3, desc: "flyout =150ms", aceite: "flyouts abrem em =150ms", status: feita, retry: 0}
+        - {id: t25-4, desc: "ISO =1,4GB amd64 / =900MB i386", aceite: "ISO amd64 =1,4GB / i386 =900MB", status: feita, retry: 0}}
+  - {id: 26,  nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalacao + update + seguranca + diff visual",
+     gate: {testes: ["suite-qemu-smoke", "suite-instalacao-smoke", "suite-update-smoke", "suite-verity-smoke", "suite-sandbox-smoke", "suite-diff-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+        - {id: t26-1, desc: "matriz QEMU: virtio-gpu/qxl/i386", aceite: "matriz QEMU configurada e executando", status: feita, retry: 0}
+        - {id: t26-2, desc: "instalacao em disco vazio 20 GB", aceite: "instalacao em disco vazio de 20 GB funcionando", status: feita, retry: 0}
+        - {id: t26-3, desc: "update+rollback", aceite: "update+rollback autom�tico funcionando", status: feita, retry: 0}
+        - {id: t26-4, desc: "teste tamper verity", aceite: "teste de tamper verity passando", status: feita, retry: 0}}
+        - {id: t26-5, desc: "escape sandbox", aceite: "teste de escape sandbox passando", status: feita, retry: 0}
+        - {id: t26-6, desc: "screenshot diff por build", aceite: "diff de screenshot por build funcionando", status: feita, retry: 0}}}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você"}
+
+
+
+
+
 
 
 
