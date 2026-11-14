@@ -186,7 +186,17 @@ fases:
         - {id: t26-4, desc: "teste tamper verity", aceite: "teste de tamper verity passando", status: feita, retry: 0}}
         - {id: t26-5, desc: "escape sandbox", aceite: "teste de escape sandbox passando", status: feita, retry: 0}
         - {id: t26-6, desc: "screenshot diff por build", aceite: "diff de screenshot por build funcionando", status: feita, retry: 0}}}
-  - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por vocÃª"}
+  - {id: 27,  nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você",
+     gate: {testes: ["qa-hardware-smoke", "docs-smoke", "site-smoke", "release-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+        - {id: t27-1, desc: "QA hardware real", aceite: "QA em hardware real aprovado", status: feita, retry: 0}
+        - {id: t27-2, desc: "docs", aceite: "documentação completa atualizada", status: pendente, retry: 0}
+        - {id: t27-3, desc: "site", aceite: "site de download publicado", status: feita, retry: 0}
+        - {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}}
+
+
+
+
 
 
 
