@@ -142,13 +142,21 @@ fases:
        - {id: t20-2, desc: "jogos-nuvem: Sober best-effort", aceite: "Sober instalado e funcional", status: feita, retry: 0}
        - {id: t20-3, desc: "jogos-nuvem: PWAs nuvem por tier", aceite: "PWAs por tier (Prime/Core/Lite)", status: pendente, retry: 0}
        - {id: t20-4, desc: "jogos-nuvem: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
-  - {id: 21, nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper"}
+  - {id: 21,  nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper",
+     gate: {testes: ["shield-verity-smoke", "shield-lockdown-smoke", "shield-apparmor-smoke", "shield-seccomp-smoke", "shield-nftables-smoke", "shield-tamper-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t21-1, desc: "shield-hardening: verity+lockdown", aceite: "verity+lockdown ativo", status: feita, retry: 0}
+       - {id: t21-2, desc: "shield-hardening: AppArmor+seccomp", aceite: "AppArmor+seccomp ativos", status: feita, retry: 0}
+       - {id: t21-3, desc: "shield-hardening: nftables+testes tamper", aceite: "nftables+testes tamper aprovados", status: feita, retry: 0}
+       - {id: t21-4, desc: "shield-hardening: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
   - {id: 22, nome: modo-cofre,               peso: 3, aceite: "microVM descartável abre app de risco e销毁 sem resíduo"}
   - {id: 23, nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automático + teste update"}
   - {id: 24, nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido"}
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalação + update + segurança + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você"}
+
+
 
 
 

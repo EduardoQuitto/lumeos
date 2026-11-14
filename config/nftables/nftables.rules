@@ -1,0 +1,63 @@
+#!/usr/sbin/nft -f
+
+# nftables rules — Lume Shield
+# Requisitos fase 21:
+#   - default-deny entrada
+#   - Regras específicas para serviços Lume OS
+
+flush ruleset
+
+table inet filter {
+    chain input {
+        type filter hook input priority 0 ; policy drop;
+
+        # Permitir loopback
+        iifname "lo" accept
+
+        # Permitir conexões estabelecidas
+        ct state established,related accept
+
+        # ICMP (ping, etc.)
+        ip protocol icmp accept
+        ip6 protocol icmpv6 accept
+
+        # SSH (porta 22)
+        tcp dport 22 accept
+
+        # DNS (porta 53)
+        udp dport 53 accept
+        tcp dport 53 accept
+
+        # HTTP/HTTPS (portas 80/443)
+        tcp dport { 80, 443 } accept
+
+        # Plymouth/boot serviços (se necessário)
+        tcp dport { 8080, 8443 } accept
+
+        # Lume OS serviços específicos
+        tcp dport { 7777 } accept      # Mission Control
+        tcp dport { 8000 } accept      # Lume Files
+        tcp dport { 8001 } accept      # Lume Settings
+        tcp dport { 8002 } accept      # Lume Store
+        tcp dport { 8003 } accept      # Lume Terminal
+        tcp dport { 8004 } accept      # Lume Security
+
+        # Log de pacotes descartados
+        log prefix "nftables-drop: " level debug
+    }
+
+    chain forward {
+        type filter hook forward priority 0 ; policy drop;
+    }
+
+    chain output {
+        type filter hook output priority 0 ; policy accept;
+    }
+}
+
+# Tabela para NAT (se necessário)
+table inet nat {
+    chain postrouting {
+        type nat hook postrouting priority 100 ; policy accept;
+    }
+}
