@@ -7,8 +7,8 @@ fases:
      tarefas:
        - {id: t0-1, desc: "backend axum+SQLite+SSE :7777", aceite: "API /api/state, /api/events, /api/control, heartbeat funcionando", status: feita, retry: 0}
        - {id: t0-2, desc: "web Svelte painel :7777", aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots", status: feita, retry: 0}
-       - {id: t0-3, desc: "tests/qemu/smoke.sh CI QEMU", aceite: "boot QEMU <30s + screendump + ISO amd64/i386", status: pendente, retry: 0}
-       - {id: t0-4, desc: "systemd timer 5h + heartbeat por tarefa", aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas", status: pendente, retry: 0}}
+       - {id: t0-3, desc: "tests/qemu/smoke.sh CI QEMU", aceite: "boot QEMU <30s + screendump + ISO amd64/i386", status: feita, retry: 0}
+       - {id: t0-4, desc: "systemd timer 5h + heartbeat por tarefa", aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas", status: feita, retry: 0}}
   - {id: 1,  nome: design-system-assets,     peso: 4, aceite: "tokens.json + logo SVG 6 variantes + cursor + wallpapers + sons",
      gate: {testes: ["design-assets-smoke"], blockers: 0, signoff: pendente},
      tarefas:
@@ -104,10 +104,10 @@ fases:
   - {id: 15,  nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalacao",
      gate: {testes: ["instalador-disco-vazio-smoke", "instalador-luks-smoke", "instalador-ab-smoke", "instalador-vm-smoke"], blockers: 0, signoff: pendente},
      tarefas:
-       - {id: t15-1, desc: "instalador HD: interface de instalacao em disco vazio", aceite: "tela de instalacao funcional em VM", status: fazendo, retry: 0}
-       - {id: t15-2, desc: "instalador HD: LUKS+A/B (slots A e B)", aceite: "particao LUKS com slots A e B funcionais", status: pendente, retry: 0}
-       - {id: t15-3, desc: "instalador HD: instalacao em VM teste", aceite: "instalacao completa em VM sem erros", status: pendente, retry: 0}
-       - {id: t15-4, desc: "instalador HD: teste instalacao", aceite: "teste de instalacao completa aprovado", status: pendente, retry: 0}}
+       - {id: t15-1, desc: "instalador HD: interface de instalacao em disco vazio", aceite: "tela de instalacao funcional em VM", status: feita, retry: 0}
+       - {id: t15-2, desc: "instalador HD: LUKS+A/B (slots A e B)", aceite: "particao LUKS com slots A e B funcionais", status: feita, retry: 0}
+       - {id: t15-3, desc: "instalador HD: instalacao em VM teste", aceite: "instalacao completa em VM sem erros", status: feita, retry: 0}
+       - {id: t15-4, desc: "instalador HD: teste instalacao", aceite: "teste de instalacao completa aprovado", status: feita, retry: 0}}
   - {id: 16,  nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalacao",
      gate: {testes: ["pendrive-luks-smoke", "pendrive-backup-smoke", "pendrive-restore-smoke"], blockers: 0, signoff: pendente},
       tarefas:
@@ -119,14 +119,14 @@ fases:
      tarefas:
        - {id: t17-1, desc: "edição Lite i386: ISO bootável i386", aceite: "ISO i386 bootável em VM", status: feita, retry: 0}
        - {id: t17-2, desc: "edição Lite: shell X11 + picom", aceite: "shell X11 com picom funcionando", status: feita, retry: 0}
-       - {id: t17-3, desc: "edição Lite: idle =250MB", aceite: "idle =250MB em VM Lite", status: pendente, retry: 0}
+       - {id: t17-3, desc: "edição Lite: idle =250MB", aceite: "idle =250MB em VM Lite", status: feita, retry: 0}
        - {id: t17-4, desc: "edição Lite: teste boot em VM", aceite: "teste de boot completo em VM aprovado", status: feita, retry: 0}}
   - {id: 18,  nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle =350MB",
      gate: {testes: ["core-labwc-smoke", "core-quickshell-smoke", "core-materiais-smoke", "core-idle-smoke"], blockers: 0, signoff: pendente},
      tarefas:
        - {id: t18-1, desc: "edição Core amd64: shell labwc+Quickshell", aceite: "shell labwc+Quickshell funcionando", status: feita, retry: 0}
        - {id: t18-2, desc: "edição Core: matriz materiais (Névoa + Sólido + sombras)", aceite: "materiais Névoa, Sólido e sombras funcionais", status: feita, retry: 0}
-       - {id: t18-3, desc: "edição Core: idle =350MB", aceite: "idle =350MB em VM Core", status: pendente, retry: 0}
+       - {id: t18-3, desc: "edição Core: idle =350MB", aceite: "idle =350MB em VM Core", status: feita, retry: 0}
        - {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: feita, retry: 0}}
   - {id: 19,  nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando",
      gate: {testes: ["win-wine-smoke", "win-bwrap-smoke", "win-selos-smoke", "win-3apps-smoke"], blockers: 0, signoff: pendente},
@@ -140,7 +140,7 @@ fases:
      tarefas:
        - {id: t20-1, desc: "jogos-nuvem: Steam+Proton para tiers B/C", aceite: "Steam+Proton instalado e funcional", status: feita, retry: 0}
        - {id: t20-2, desc: "jogos-nuvem: Sober best-effort", aceite: "Sober instalado e funcional", status: feita, retry: 0}
-       - {id: t20-3, desc: "jogos-nuvem: PWAs nuvem por tier", aceite: "PWAs por tier (Prime/Core/Lite)", status: pendente, retry: 0}
+       - {id: t20-3, desc: "jogos-nuvem: PWAs nuvem por tier", aceite: "PWAs por tier (Prime/Core/Lite)", status: feita, retry: 0}
        - {id: t20-4, desc: "jogos-nuvem: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}
   - {id: 21,  nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper",
      gate: {testes: ["shield-verity-smoke", "shield-lockdown-smoke", "shield-apparmor-smoke", "shield-seccomp-smoke", "shield-nftables-smoke", "shield-tamper-smoke"], blockers: 0, signoff: pendente},
@@ -156,11 +156,21 @@ fases:
        - {id: t22-2, desc: "modo cofre: abre app de risco", aceite: "app de risco roda na microVM", status: feita, retry: 0}
        - {id: t22-3, desc: "modo cofre: destrói sem resíduo", aceite: "microVM destruída sem deixar resíduo", status: feita, retry: 0}
        - {id: t22-4, desc: "modo cofre: teste execução", aceite: "teste de execução completa aprovado", status: feita, retry: 0}}
-  - {id: 23, nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automÃ¡tico + teste update"}
+  - {id: 23,  nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automático + teste update",
+     gate: {testes: ["update-backend-smoke", "update-manifest-smoke", "update-rollback-smoke", "update-vm-smoke"], blockers: 0, signoff: pendente},
+     tarefas:
+       - {id: t23-1, desc: "update A/B: slot A/B + verity", aceite: "slots A/B com verity e SHA256", status: feita, retry: 0}
+       - {id: t23-2, desc: "update A/B: manifesto assinado (minisign) + slot inativo", aceite: "manifesto assinado e slot inativo preenchido", status: feita, retry: 0}
+       - {id: t23-3, desc: "update A/B: tela de reinício + boot B + health-check 2 boots", aceite: "tela de reinício, boot B e health-check", status: feita, retry: 0}
+       - {id: t23-4, desc: "update A/B: rollback automático + teste update", aceite: "rollback automático + teste de update", status: feita, retry: 0}}
   - {id: 24, nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido"}
   - {id: 25, nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers"}
   - {id: 26, nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalaÃ§Ã£o + update + seguranÃ§a + diff visual"}
   - {id: 27, nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por vocÃª"}
+
+
+
+
 
 
 
