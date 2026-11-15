@@ -6,45 +6,32 @@ use std::fs;
 use std::path::Path;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct UpdateManifest {
-    pub version: String,
-    pub slot: String,
-    pub sha256: String,
-    pub size_bytes: u64,
-    pub minisign_sig: String,
-    pub minisign_key: String,
-    pub timestamp: String,
-    pub previous_slot: String,
-    pub url: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum SlotStatus {
-    Active,
-    Inactive,
-    Updating,
-    Verified,
-    Corrupted,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SlotInfo {
-    pub name: String,
-    pub status: SlotStatus,
-    pub version: Option<String>,
+    pub nome: String,
+    pub status: String,
+    pub versao: Option<String>,
     pub sha256: Option<String>,
     pub boot_count: u32,
     pub health_check_passed: bool,
 }
 
-pub struct Updated {
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ArmazenamentoInfo {
+    pub slot_ativo: String,
+    pub slots: Vec<SlotInfo>,
+    pub espaco_total: u64,
+    pub espaco_usado: u64,
+    pub espaco_livre: u64,
+}
+
+pub struct Stored {
     db: Connection,
-    active_slot: String,
+    slot_ativo: String,
 }
 
 impl Stored {
     pub fn novo(caminho_db: &str) -> Result<Self, Box<dyn std::error::Error>> {
-        let db = rusqlite::Connection::open(caminho_db)?;
+        let db = Connection::open(caminho_db)?;
         db.execute_batch(
             "CREATE TABLE IF NOT EXISTS slots (
                 name TEXT PRIMARY KEY,

@@ -219,7 +219,6 @@ impl FilesD {
         for evento in rows {
             eventos.push(evento?);
         }
-
         Ok(eventos)
     }
 }

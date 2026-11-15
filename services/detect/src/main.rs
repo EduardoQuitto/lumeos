@@ -119,12 +119,12 @@ fn detect_cpu() -> (u32, u32, String) {
                 }
             }
             if line.starts_with("processor") {
-                threads += 1;
+                cpu_threads += 1;
             }
             if line.starts_with("cpu cores") {
                 if let Some(cores_str) = line.split(':').nth(1) {
                     if let Ok(c) = cores_str.trim().parse::<u32>() {
-                        cores = c;
+                        cpu_cores = c;
                     }
                 }
             }
@@ -296,7 +296,7 @@ fn main() {
     println!("=== JSON de Saída ===");
     println!("{}", serde_json::to_string_pretty(&detect).unwrap());
 
-    if let Err(e) = std::fs::write("/var/lib/lume/detect.json", serde_json::to_string_pretty(&detect).unwrap()) {
+    if let Err(e) = fs::write("/var/lib/lume/detect.json", serde_json::to_string_pretty(&detect).unwrap()) {
         eprintln!("Aviso: não foi possível salvar detecção: {}", e);
     }
 

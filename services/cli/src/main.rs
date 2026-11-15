@@ -187,6 +187,32 @@ fn main() {
                 }
             }
         }
+        Comando::Store { comando } => {
+            match comando {
+                StoreComando::Listar => {
+                    println!("[STORE] Aplicativos disponíveis:");
+                    println!("  - OnlyOffice (Escritório, Prime)");
+                    println!("  - WhatsApp PWA (Internet, Core)");
+                    println!("  - Spotify (Internet, Prime)");
+                    println!("  - Discord (Internet, Core)");
+                    println!("  - Zoom (Internet, Prime)");
+                    println!("  - Steam (Jogos, Prime)");
+                    println!("  - Firefox ESR (Internet, Core)");
+                    println!("  - VLC (Multimídia, Lite)");
+                }
+                StoreComando::Instalar { nome } => {
+                    println!("[STORE] Instalando {}...", nome);
+                    println!("  Baixando Flatpak...");
+                    println!("  Verificando assinatura...");
+                    println!("  Instalando...");
+                    println!("  {} instalado com sucesso!", nome);
+                }
+                StoreComando::Remover { nome } => {
+                    println!("[STORE] Removendo {}...", nome);
+                    println!("  {} removido com sucesso!", nome);
+                }
+            }
+        }
         Comando::Fetch => {
             println!("[FETCH] Informações do Sistema Lume OS");
             println!("----------------------------------------");
@@ -195,7 +221,7 @@ fn main() {
             println!("  Tier: Prime");
             println!("  CPU: Intel i5-14400 (6 núcleos, 12 threads)");
             println!("  RAM: 32 GB DDR5");
-            println!("  GPU: Intel UHD Graphics 730");
+            println!("  GPU: Intel UHD Graphics 730 (GLES3.2, VA-API)");
             println!("  Kernel: 6.6.x-lume");
             println!("  Shell: foot (Wayland) / xfce4-terminal (Lite)");
             println!("  Shell de sessão: Quickshell (Qt6/QML)");

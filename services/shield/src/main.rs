@@ -16,7 +16,7 @@ pub struct ShieldStatus {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EscudoEstado {
+pub struct ShieldStatus {
     pub verifica_tegridade: bool,
     pub lockdown: bool,
     pub apparmor: bool,
@@ -34,15 +34,14 @@ impl Shield {
     pub fn novo(caminho_db: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let db = Connection::open(caminho_db)?;
         db.execute_batch(
-            "CREATE TABLE IF NOT EXISTS shield_estado (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+            "CREATE TABLE IF NOT EXISTS escudo_estado (
                 verifica_tegridade INTEGER,
                 lockdown INTEGER,
                 apparmor INTEGER,
                 seccomp INTEGER,
                 nftables INTEGER,
                 tpm2 INTEGER,
-                timestamp TEXT
+                ultimo_verificacao TEXT
             );",
         )?;
 
@@ -54,7 +53,7 @@ impl Shield {
         let lockdown_ativo = self.verificar_lockdown()?;
 
         self.db.execute(
-            "INSERT INTO shield_estado (verifica_tegridade, lockdown, timestamp) VALUES (?1, ?2, ?3)",
+            "INSERT INTO escudo_estado (verifica_tegridade, lockdown, ultimo_verificacao) VALUES (?1, ?2, ?3)",
             rusqlite::params![verito_ativo as i32, lockdown_ativo as i32, Utc::now().to_rfc3339()],
         )?;
 
@@ -95,7 +94,7 @@ impl Shield {
     }
 
     pub fn configurar_seccomp(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        if Path::new("/proc/sys/kernel/seccomp").exists() {
+        if std::path::Path::new("/sys/kernel/security/seccomp").exists() {
             log::info!("seccomp suportado pelo kernel");
             return Ok(true);
         }
@@ -130,7 +129,7 @@ impl Shield {
         let mut falhas = 0;
 
         if self.testar_modificacao_arquivo_sistema() {
-            log::warn!("AVISO: Modificação de arquivo do sistema não foi bloqueada");
+            log::warn!("ALERTA: Modificação de arquivo do sistema não foi bloqueada");
             falhas += 1;
         } else {
             log::info!("OK: Modificação de arquivo do sistema foi bloqueada");
@@ -272,7 +271,7 @@ fn main() {
 
     match escudo.obter_estado() {
         Ok(estado) => {
-            println!("\n=== Estado do Shield ===");
+            println!("\n=== Estado do Escudo Lume ===");
             println!("  Verity: {}", if estado.verifica_tegridade { "Ativo" } else { "Inativo" });
             println!("  Lockdown: {}", if estado.lockdown { "Ativo" } else { "Inativo" });
             println!("  AppArmor: {}", if estado.apparmor { "Ativo" } else { "Inativo" });
