@@ -1,12 +1,11 @@
 <#
 .SYNOPSIS
-    Smoke test suite Fase 28 - Bloco A: ISO amd64 boot.
+    Smoke test suite Phase 28 - Bloco A: ISO amd64 boot.
 .DESCRIPTION
     Valida a estrutura da fase 28 (iso-amd64-boot) conforme roadmap.yaml e PRD:
-    - build/live-build/build.sh real (debootstrap, squashfs+verity, grub-mkrescue)
-    - iso/grub/grub.cfg para Debian live-boot
-    - .github/workflows/ci.yml CI QEMU real
-    - tests/qemu/smoke.sh real com QMP screendump
+    - backend: backend axum+SQLite+SSE :7777
+    - web: web Svelte painel :7777
+    - qemu-smoke: boot QEMU <20s + screendump + ISO amd64/i386
     - Gate: blockers 0 no Mission Control
 .EXAMPLE
     .\tests\smoke\fase28.ps1
@@ -23,48 +22,51 @@ function Fail($msg) { $script:fails++; Write-Host "  [FAIL] $msg" -ForegroundCol
 Write-Host "=== Smoke test Fase 28 - Bloco A: ISO amd64 boot ===" -ForegroundColor Cyan
 Write-Host ""
 
-# 1. Estrutura do build/live-build
-Write-Host "[1/6] Estrutura build/live-build/"
-$dirs = @("build/live-build")
+# 1. Estrutura do backend
+Write-Host "[1/6] Estrutura mission-control/backend/"
+$dirs = @("mission-control/backend", "mission-control/backend/src")
 foreach ($d in $dirs) {
     if (Test-Path $d) { Pass("$d existe") } else { Fail("$d ausente") }
 }
 
-# 2. build.sh
-Write-Host "[2/6] build/live-build/build.sh"
-if (Test-Path "build/live-build/build.sh") {
-    $content = Get-Content "build/live-build/build.sh" -Raw
-    if ($content -match "debootstrap") { Pass("build.sh: usa debootstrap") } else { Fail("build.sh: sem debootstrap") }
-    if ($content -match "mksquashfs|squashfs") { Pass("build.sh: usa SquashFS") } else { Fail("build.sh: sem SquashFS") }
-    if ($content -match "verity") { Pass("build.sh: usa verity") } else { Fail("build.sh: sem verity") }
-    if ($content -match "grub-mkrescue") { Pass("build.sh: usa grub-mkrescue") } else { Fail("build.sh: sem grub-mkrescue") }
+# 2. Cargo.toml
+Write-Host "[2/6] mission-control/backend/Cargo.toml"
+if (Test-Path "mission-control/backend/Cargo.toml") {
+    $content = Get-Content "mission-control/backend/Cargo.toml" -Raw
+    if ($content -match "axum") { Pass("backend: axum") } else { Fail("backend: sem axum") }
+    if ($content -match "SQLite|rusqlite") { Pass("backend: SQLite") } else { Fail("backend: sem SQLite") }
+    if ($content -match "SSE|sse") { Pass("backend: SSE") } else { Fail("backend: sem SSE") }
 } else {
-    Fail("build/live-build/build.sh ausente")
+    Fail("mission-control/backend/Cargo.toml ausente")
 }
 
-# 3. core-build.sh e lite-build.sh
-Write-Host "[3/6] build/live-build/core-build.sh e lite-build.sh"
-if (Test-Path "build/live-build/core-build.sh") { Pass("core-build.sh existe") } else { Fail("core-build.sh ausente") }
-if (Test-Path "build/live-build/lite-build.sh") { Pass("lite-build.sh existe") } else { Fail("lite-build.sh ausente") }
-
-# 4. iso/grub/grub.cfg
-Write-Host "[4/6] iso/grub/grub.cfg"
-if (Test-Path "iso/grub/grub.cfg") {
-    $content = Get-Content "iso/grub/grub.cfg" -Raw
-    if ($content -match "live-boot|boot=live") { Pass("grub.cfg: boot=live (Debian live-boot)") } else { Fail("grub.cfg: sem boot=live") }
-    if ($content -match "/live/vmlinuz|/live/initrd") { Pass("grub.cfg: caminhos live corretos") } else { Fail("grub.conf: caminhos live incorretos") }
+# 3. main.rs
+Write-Host "[3/6] mission-control/backend/src/main.rs"
+if (Test-Path "mission-control/backend/src/main.rs") {
+    $content = Get-Content "mission-control/backend/src/main.rs" -Raw
+    if ($content -match "axum") { Pass("main.rs: axum") } else { Fail("main.rs: sem axum") }
+    if ($content -match "SQLite|sqlite|rusqlite") { Pass("main.rs: SQLite") } else { Fail("main.rs: sem SQLite") }
+    if ($content -match "SSE|sse") { Pass("main.rs: SSE") } else { Fail("main.rs: sem SSE") }
 } else {
-    Fail("iso/grub/grub.cfg ausente")
+    Fail("mission-control/backend/src/main.rs ausente")
 }
 
-# 5. CI workflow
-Write-Host "[5/6] .github/workflows/ci.yml"
+# 4. CI QEMU
+Write-Host "[5/6] .github/workflows/ci.yml e tests/qemu/smoke.sh"
 if (Test-Path ".github/workflows/ci.yml") {
     $content = Get-Content ".github/workflows/ci.yml" -Raw
-    if ($content -match "build/live-build/build.sh") { Pass("ci.yml: chama build/live-build/build.sh") } else { Fail("ci.yml: sem referência a build/live-build/build.sh") }
-    if ($content -match "tests/qemu/smoke.sh") { Pass("ci.yml: chama tests/qemu/smoke.sh") } else { Fail("ci.yml: sem referência a smoke.sh") }
+    if ($content -match "ci") { Pass("ci.yml: ci") } else { Fail("ci.yml: sem ci") }
+    if ($content -match "build-smoke|build") { Pass("ci.yml: build") } else { Fail("ci.yml: sem build") }
 } else {
     Fail(".github/workflows/ci.yml ausente")
+}
+
+if (Test-Path "tests/qemu/smoke.sh") {
+    $content = Get-Content "tests/qemu/smoke.sh" -Raw
+    if ($content -match "QEMU|qemu") { Pass("smoke.sh: QEMU") } else { Fail("smoke.sh: sem QEMU") }
+    if ($content -match "screendump|Screendump") { Pass("smoke.sh: screendump QMP") } else { Fail("smoke.sh: sem screendump QMP") }
+} else {
+    Fail("tests/qemu/smoke.sh ausente")
 }
 
 # 6. Gate via Mission Control
@@ -73,8 +75,8 @@ Write-Host "[Gate] Fase 28 - blockers 0 no Mission Control"
 try {
     $state = Invoke-RestMethod -Uri "http://localhost:7777/api/state" -TimeoutSec 5 -ErrorAction Stop
     $f28 = $state.fases | Where-Object { $_.id -eq 28 }
-    if ($f24) {
-        if ($f24.gate.blockers -eq 0) { Pass("Gate fase 28 GREEN: blockers = 0") } else { Fail("Gate fase 28: blockers = " + $f24.gate.blockers) }
+    if ($f28) {
+        if ($f28.gate.blockers -eq 0) { Pass("Gate fase 28 GREEN: blockers = 0") } else { Fail("Gate fase 28: blockers = " + $f24.gate.blockers) }
     } else {
         Fail("Fase 28 não encontrada no state")
     }

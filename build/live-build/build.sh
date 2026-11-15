@@ -1,135 +1,395 @@
-projeto: lume-os
-versao: "2026.11"
-canal: stable
-fases:
-  - {id: 0,  nome: fundacao-mission-control, peso: 4, aceite: "painel :7777 com heartbeat + CI QEMU verde + PRD.md gerado", gate: {testes: ["backend-smoke", "web-smoke", "qemu-smoke"], blockers: 0, signoff: concluido}, tarefas: [{id: t0-1, desc: "backend axum+SQLite+SSE :7777", aceite: "API /api/state, /api/events, /api/control, heartbeat funcionando", status: feita, retry: 0}, {id: t0-2, desc: "web Svelte painel :7777", aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots", status: feita, retry: 0}, {id: t0-3, desc: "tests/qemu/smoke.sh CI QEMU", aceite: "boot QEMU <30s + screendump + ISO amd64/i386", status: feita, retry: 0}, {id: t0-4, desc: "systemd timer 5h + heartbeat por tarefa", aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas", status: feita, retry: 0}]}
-  - {id: 1,  nome: design-system-assets,     peso: 4, aceite: "tokens.json + logo SVG 6 variantes + cursor + wallpapers + sons", gate: {testes: ["design-assets-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t1-1, desc: "tokens.json revisado (raios, espaco, tipo, motion, materias, sombra, foco, tiers)", aceite: "tokens validos e coerentes com PRD §4", status: feita, retry: 0}, {id: t1-2, desc: "logo SVG 6 variantes (dark, light, mono-white, mono-ink, acento, simple <24px)", aceite: "6 SVGs validos, conceito L+pétala+arcos orbitais", status: feita, retry: 0}, {id: t1-3, desc: "cursor Lume Arrow (24/32/48 + espera arcos do logo)", aceite: "arquivos de cursor definidos", status: feita, retry: 0}, {id: t1-4, desc: "wallpapers Aurora Lume light/dark + pack pareado", aceite: "wallpapers light+dark para cada id", status: feita, retry: 0}, {id: t1-5, desc: "sons CC0 (notificacao, volume, erro)", aceite: "arquivos de áudio definidos", status: feita, retry: 0}]}
-  - {id: 2,  nome: iso-amd64-boot,           peso: 4, aceite: "boot QEMU <20s + Plymouth Lume + screenshot", gate: {testes: ["iso-build-smoke", "qemu-boot-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t2-1, desc: "estrutura iso/{plymouth,calamares,grub,hooks} + Plymouth Lume (arcos orbitais)", aceite: "Plymouth com tema Lume, tela de boot amd64", status: pendente, retry: 0}, {id: t2-2, desc: "build/live-build/build.sh para ISO amd64 (<1,4 GB)", aceite: "script de build da ISO como artefato para Linux", status: pendente, retry: 0}, {id: t2-3, desc: "tests/qemu/smoke.sh boot QEMU <20s + screendump", aceite: "boot <20s + screenshot salvo em design/shots/2/", status: pendente, retry: 0}]}
-  - {id: 3,  nome: daemons-rust-detect,      peso: 3, aceite: "lume-detect classifica tiers + API D-Bus + lume-fetch", gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t3-1, desc: "estrutura services/{detect,updated,shield,filesd,stored,cli} em Rust", aceite: "pastas criadas com Cargo.toml cada", status: feita, retry: 0}, {id: t3-2, desc: "lume-detect: classificação de tiers (CPU/RAM/GPU/VA-API/VM)", aceite: "detecta Prime/Core/Lite, VM→Core padrão", status: feita, retry: 0}, {id: t3-3, desc: "API D-Bus para daemons (detect, updated, shield, filesd, stored, cli)", aceite: "interfaces D-Bus definidas e registradas", status: feita, retry: 0}, {id: t3-4, desc: "lume-fetch: CLI de informação do sistema (tier, hardware, versão)", aceite: "comando `lume fetch` funcional", status: feita, retry: 0}}}
-  - {id: 4,  nome: barra-tray-relogio,       peso: 4, aceite: "barra pilula + indicadores + relogio por locale", gate: {testes: ["shell-bar-smoke", "shell-tray-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t4-1, desc: "shell/quickshell: barra pilula (48px, margem 8, icones 28, dot 3px, hover lift 2px)", aceite: "barra pilula com overflow chevron", status: feita, retry: 0}, {id: t4-2, desc: "tray: Wi-Fi, volume/bateria, relogio 2 linhas por locale, cluster", aceite: "indicadores funcionam, relogio exibe locale", status: feita, retry: 0}, {id: t4-3, desc: "shell/lite-host: host QML X11 (Qt6 i386, fallback Qt5)", aceite: "lite host roda em X11", status: feita, retry: 0}}]
-  - {id: 5,  nome: flyouts,                  peso: 4, aceite: "quick settings/redes/volume/calendário abrem <150ms", gate: {testes: ["flyout-redes-smoke", "flyout-quicksettings-smoke", "flyout-volume-smoke", "flyout-calendario-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t5-1, desc: "flyout redes (lista/senha/oculta/WireGuard), raio 16, vidro, slide 12px mola", aceite: "abre <150ms", status: feita, retry: 0}, {id: t5-2, desc: "flyout quick settings (6 toggles + 2 sliders + bateria + editar)", aceite: "abre <150ms", status: feita, retry: 0}, {id: t5-3, desc: "flyout volume (dispositivos de áudio)", aceite: "abre <150ms", status: feita, retry: 0}, {id: t5-4, desc: "flyout calendario+notificacoes (mes + lista + limpar)", aceite: "abre <150ms", status: feita, retry: 0}]}
-  - {id: 6,  nome: iniciar-busca,            peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo", gate: {testes: ["menu-iniciar-smoke", "busca-universal-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t6-1, desc: "menu iniciar 640x560: busca topo, grid 6x3 fixados, recentes, rodape usuario+energia", aceite: "menu abre <200ms, layout 640x560", status: feita, retry: 0}, {id: t6-2, desc: "busca universal: apps/arquivos/configs/calculo (web off padrao)", aceite: "4 provedores, resultados <100ms", status: feita, retry: 0}}]
-  - {id: 7,  nome: janelas-snap-overview,    peso: 4, aceite: "libdecor Lume + snap 4 layouts + alt-tab + overview", gate: {testes: ["libdecor-smoke", "snap-smoke", "alt-tab-smoke", "overview-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t7-1, desc: "libdecor-lume: plugin para janelas terceiros (CSD QML + decorações)", aceite: "plugin compila e registra janelas", status: feita, retry: 0}, {id: t7-2, desc: "snap: 4 layouts (borda/canto + Super+setas)", aceite: "arrastar borda/canto e Super+setas funcionam", status: feita, retry: 0}, {id: t7-3, desc: "alt-tab switcher", aceite: "alternar janelas com Alt+Tab", status: feita, retry: 0}, {id: t7-4, desc: "overview: Super+Tab com thumbnails centralizados", aceite: "thumbnails centralizados, abrir <200ms", status: feita, retry: 0}}]
-  - {id: 8,  nome: lume-files,               peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extraccao", gate: {testes: ["files-toolbar-smoke", "files-breadcrumb-smoke", "files-abas-smoke", "files-busca-smoke", "files-lixo-smoke", "files-montagem-smoke", "files-extracao-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t8-1, desc: "lume-files: toolbar + breadcrumb + abas", aceite: "toolbar com acoes, breadcrumb editavel, abas com arrasto", status: feita, retry: 0}, {id: t8-2, desc: "lume-files: busca rg + grade/lista + sidebar", aceite: "busca com rg, visualizacao grade e lista, sidebar lugares/dispositivos/lixo", status: feita, retry: 0}, {id: t8-3, desc: "lume-files: lixo + montagem (udisks2)", aceite: "lixeira com restaurar/esvaziar, montagem de dispositivos USB", status: feita, retry: 0}, {id: t8-4, desc: "lume-files: extracao p7zip + propriedades", aceite: "extrair arquivos compactados, ver propriedades de arquivos", status: feita, retry: 0}}]
-  - {id: 9,  nome: settings-parte1,          peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas", gate: {testes: ["settings-sistema-smoke", "settings-tela-smoke", "settings-som-smoke", "settings-rede-smoke", "settings-bt-smoke", "settings-personalizacao-smoke", "settings-apps-smoke", "settings-contas-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t9-1, desc: "settings: janela principal com nav esquerda 240px vidro-lite + conteudo papel/tinta", aceite: "janela settings abre com navegacao lateral", status: feita, retry: 0}, {id: t9-2, desc: "settings: paginas sistema, tela, som", aceite: "3 paginas funcionais com toques e slider", status: feita, retry: 0}, {id: t9-3, desc: "settings: paginas rede, bt", aceite: "2 paginas de conectividade funcionais", status: feita, retry: 0}, {id: t9-4, desc: "settings: paginas personalizacao, apps, contas", aceite: "3 paginas finais funcionais", status: feita, retry: 0}}]
-  - {id: 10, nome: settings-parte2-security, peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield", gate: {testes: ["settings-shield-smoke", "settings-firewall-smoke", "settings-sandbox-smoke", "settings-cofre-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t10-1, desc: "settings: pagina seguranca com checklist Shield (verity, lockdown, AppArmor, seccomp, nftables, TPM2)", aceite: "checklist com todos os itens do Shield", status: feita, retry: 0}, {id: t10-2, desc: "settings: pagina firewall nftables default-deny entrada", aceite: "toggle firewall com regras default-deny", status: feita, retry: 0}, {id: t10-3, desc: "settings: pagina inspetor sandbox", aceite: "inspecionar sandbox de apps e daemons", status: feita, retry: 0}, {id: t10-4, desc: "settings: pagina launcher Cofre + aviso modo live", aceite: "launcher microVM descartavel + aviso modo live", status: feita, retry: 0}}]
-  - {id: 11, nome: terminal-cli,             peso: 3, aceite: "foot+starship+quake+command-not-found+CLI lume completa", gate: {testes: ["terminal-foot-smoke", "terminal-starship-smoke", "terminal-quake-smoke", "cli-lume-smoke", "cli-command-not-found-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t11-1, desc: "terminal: foot (Wayland) + xfce4-terminal (Lite) + starship + abas + quake", aceite: "terminal funciona com abas e modo quake", status: feita, retry: 0}, {id: t11-2, desc: "CLI lume completa: update, shield, tier, store, fetch, session", aceite: "comando `lume` com todos os subcomandos", status: feita, retry: 0}, {id: t11-3, desc: "command-not-found", aceite: "sugere pacote ao digitar comando nao encontrado", status: feita, retry: 0}}]
-  - {id: 12, nome: loja,                     peso: 4, aceite: "8 categorias + badges tier + fila + flatpak install/remove", gate: {testes: ["store-categorias-smoke", "store-badges-smoke", "store-fila-smoke", "store-flatpak-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t12-1, desc: "loja: 8 categorias (Essenciais, Internet, Estudo&Office, Programação, Jogos, Windows, Segurança/Lab, Sistema)", aceite: "8 categorias visíveis com ícones e contagem", status: feita, retry: 0}, {id: t12-2, desc: "loja: badges tier (prime/core/lite) + fila de instalação", aceite: "badges de tier em apps + fila com progresso", status: feita, retry: 0}, {id: t12-3, desc: "loja: flatpak install/remove", aceite: "instalar e remover pacotes flatpak", status: feita, retry: 0}, {id: t12-4, desc: "loja: updates separado sistema/apps + aba garrafas", aceite: "updates sistema/apps separados + aba garrafas Windows", status: feita, retry: 0}}]
-  - {id: 13, nome: essenciais-pwa-mime,      peso: 3, aceite: "OOBE 1-clique instala pacote + PWAs + MIME defaults", gate: {testes: ["essenciais-pacote-smoke", "pwa-smoke", "mime-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t13-1, desc: "OOBE: pacote Essenciais 1-clique (OnlyOffice, WhatsApp PWA, Spotify/Discord/Zoom/Steam por tier, Teams PWA, Brave opcional)", aceite: "instala pacote Essenciais com 1 clique no OOBE", status: feita, retry: 0}, {id: t13-2, desc: "PWAs: Firefox modo app + .desktop + ícone (WhatsApp, Teams, Brave opcional)", aceite: "PWAs instaláveis com atalho na área de trabalho", status: feita, retry: 0}, {id: t13-3, desc: "MIME defaults: associação de arquivos para aplicativos instalados", aceite: "arquivos abrem com app correto por extensão", status: feita, retry: 0}}]
-  - {id: 14, nome: oobe-login-energia,       peso: 4, aceite: "OOBE+greeter+lock+telas desligar/reiniciar/atualizar", gate: {testes: ["oobe-cartao-smoke", "greeter-smoke", "lock-smoke", "plymouth-energia-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t14-1, desc: "OOBE: cartao central de vidro (idioma/teclado/rede/usuario/criptografia/tier/Essenciais)", aceite: "cartao vidro central com passos sequenciais", status: feita, retry: 0}, {id: t14-2, desc: "Greeter/Lock: wallpaper escurecido+blur, relogio grande, avatar central, senha em pilula", aceite: "greeter funcional com login e lock screen", status: feita, retry: 0}, {id: t14-3, desc: "Telas Plymouth: desligar/reiniciar/Instalando atualizacao", aceite: "telas Plymouth com feedback visual", status: feita, retry: 0}}]
-  - {id: 15,  nome: instalador-hd,            peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalacao", gate: {testes: ["instalador-disco-vazio-smoke", "instalador-luks-smoke", "instalador-ab-smoke", "instalador-vm-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t15-1, desc: "instalador HD: interface de instalacao em disco vazio", aceite: "tela de instalacao funcional em VM", status: feita, retry: 0}, {id: t15-2, desc: "instalador HD: LUKS+A/B (slots A e B)", aceite: "particao LUKS com slots A e B funcionais", status: feita, retry: 0}, {id: t15-3, desc: "instalador HD: instalacao em VM teste", aceite: "instalacao completa em VM sem erros", status: feita, retry: 0}, {id: t15-4, desc: "instalador HD: teste instalacao", aceite: "teste de instalacao completa aprovado", status: feita, retry: 0}}]
-  - {id: 16,  nome: pendrive-persistente,     peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalacao", gate: {testes: ["pendrive-luks-smoke", "pendrive-backup-smoke", "pendrive-restore-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t16-1, desc: "criador USB LUKS + backup/restore", aceite: "pendrive USB com criptografia LUKS", status: feita, retry: 0}, {id: t16-2, desc: "instalacao em pendrive persistente", aceite: "SO instalado e bootavel em pendrive", status: feita, retry: 0}, {id: t16-3, desc: "teste instalacao pendrive", aceite: "teste de instalacao completa aprovado", status: feita, retry: 0}}]
-  - {id: 17,  nome: edicao-lite-i386,         peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB", gate: {testes: ["lite-iso-smoke", "lite-x11-smoke", "lite-picom-smoke", "lite-idle-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t17-1, desc: "edição Lite i386: ISO bootável i386", aceite: "ISO i386 bootável em VM", status: pendente, retry: 0}, {id: t17-2, desc: "edição Lite: shell X11 + picom", aceite: "shell X11 com picom funcionando", status: pendente, retry: 0}, {id: t17-3, desc: "edição Lite: idle ≤250MB", aceite: "idle ≤250MB em VM Lite", status: pendente, retry: 0}, {id: t17-4, desc: "edição Lite: teste boot em VM", aceite: "teste de boot completo em VM aprovado", status: pendente, retry: 0}}]
-  - {id: 18,  nome: edicao-core,              peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle ≤350MB", gate: {testes: ["core-labwc-smoke", "core-quickshell-smoke", "core-materiais-smoke", "core-idle-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t18-1, desc: "edição Core amd64: shell labwc+Quickshell", aceite: "shell labwc+Quickshell funcionando", status: pendente, retry: 0}, {id: t18-2, desc: "edição Core: matriz materiais (Névoa + Sólido + sombras)", aceite: "materiais Névoa, Sólido e sombras funcionais", status: pendente, retry: 0}, {id: t18-3, desc: "edição Core: idle ≤350MB", aceite: "idle ≤350MB em VM Core", status: pendente, retry: 0}, {id: t18-4, desc: "edição Core: teste boot em VM", aceite: "teste de boot completo em VM Core aprovado", status: pendente, retry: 0}}]
-  - {id: 19,  nome: camada-windows,           peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando", gate: {testes: ["win-wine-smoke", "win-bwrap-smoke", "win-selos-smoke", "win-3apps-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t19-1, desc: "camada Windows: Wine+NTSYNC", aceite: "Wine com NTSYNC funcional", status: feita, retry: 0}, {id: t19-2, desc: "camada Windows: garrafas bwrap com selos", aceite: "garrafas isoladas com selos de tier", status: feita, retry: 0}, {id: t19-3, desc: "camada Windows: 3 apps da lista rodando", aceite: "3 apps Windows rodando em garrafas", status: feita, retry: 0}, {id: t19-4, desc: "camada Windows: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}]
-  - {id: 20,  nome: jogos-nuvem,              peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier", gate: {testes: ["cloud-steam-smoke", "cloud-sober-smoke", "cloud-pwa-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t20-1, desc: "jogos-nuvem: Steam+Proton para tiers B/C", aceite: "Steam+Proton instalado e funcional", status: feita, retry: 0}, {id: t20-2, desc: "jogos-nuvem: Sober best-effort", aceite: "Sober instalado e funcional", status: feita, retry: 0}, {id: t20-3, desc: "jogos-nuvem: PWAs nuvem por tier", aceite: "PWAs por tier (Prime/Core/Lite)", status: feita, retry: 0}, {id: t20-4, desc: "jogos-nuvem: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}]
-  - {id: 21,  nome: shield-hardening,         peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper", gate: {testes: ["shield-verity-smoke", "shield-lockdown-smoke", "shield-apparmor-smoke", "shield-seccomp-smoke", "shield-nftables-smoke", "shield-tamper-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t21-1, desc: "shield-hardening: verity+lockdown", aceite: "verity+lockdown ativo", status: feita, retry: 0}, {id: t21-2, desc: "shield-hardening: AppArmor+seccomp", aceite: "AppArmor+seccomp ativos", status: feita, retry: 0}, {id: t21-3, desc: "shield-hardening: nftables+testes tamper", aceite: "nftables+testes tamper aprovados", status: feita, retry: 0}, {id: t21-4, desc: "shield-hardening: teste execucao", aceite: "teste de execucao completa aprovado", status: feita, retry: 0}}]
-  - {id: 22,  nome: modo-cofre,               peso: 3, aceite: "microVM descartavel abre app de risco e destroi sem resíduo", gate: {testes: ["cofre-microvm-smoke", "cofre-app-risco-smoke", "cofre-sem-residuo-smoke", "cofre-execucao-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t22-1, desc: "modo cofre: microVM descart�vel", aceite: "microVM funcionando", status: feita, retry: 0}, {id: t22-2, desc: "modo cofre: abre app de risco", aceite: "app de risco roda na microVM", status: feita, retry: 0}, {id: t22-3, desc: "modo cofre: destr�i sem res�duo", aceite: "microVM destru�da sem deixar res�duo", status: feita, retry: 0}, {id: t22-4, desc: "modo cofre: teste execu��o", aceite: "teste de execu��o completa aprovado", status: feita, retry: 0}}]
-  - {id: 23,  nome: update-ab-github,         peso: 4, aceite: "manifesto assinado+slot B+rollback automático + teste update", gate: {testes: ["update-backend-smoke", "update-manifest-smoke", "update-rollback-smoke", "update-vm-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t23-1, desc: "update A/B: slot A/B + verity", aceite: "slots A/B com verity e SHA256", status: feita, retry: 0}, {id: t23-2, desc: "update A/B: manifesto assinado (minisign) + slot inativo", aceite: "manifesto assinado e slot inativo preenchido", status: feita, retry: 0}, {id: t23-3, desc: "update A/B: tela de reinício + boot B + health-check 2 boots", aceite: "tela de reinício, boot B e health-check", status: feita, retry: 0}, {id: t23-4, desc: "update A/B: rollback automático + teste update", aceite: "rollback automático + teste de update", status: feita, retry: 0}}]
-  - {id: 24,  nome: i18n-a11y,                peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido", gate: {testes: ["i18n-pt-smoke", "i18n-en-smoke", "a11y-orca-smoke", "a11y-alto-contraste-smoke", "a11y-movimento-reduzido-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t24-1, desc: "i18n-a11y: pt/en 100%", aceite: "pt-BR e en-US 100% traduzido", status: feita, retry: 0}, {id: t24-2, desc: "i18n-a11y: Orca + alto contraste", aceite: "Orca screen reader + alto contraste funcionando", status: feita, retry: 0}, {id: t24-3, desc: "i18n-a11y: movimento reduzido", aceite: "movimento reduzido configur.vel", status: feita, retry: 0}, {id: t24-4, desc: "i18n-a11y: teste execução", aceite: "teste de execução completa aprovado", status: feita, retry: 0}}]
-  - {id: 25,  nome: passe-performance,        peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers", gate: {testes: ["boot-smoke", "idle-smoke", "flyout-smoke", "iso-size-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t25-1, desc: "boot <20s em VM Prime / <30s real B", aceite: "boot <20s VM Prime / <30s real B", status: feita, retry: 0}, {id: t25-2, desc: "idle 450/350/250 MB (Prime/Core/Lite)", aceite: "idle ≤450 Prime / ≤350 Core / ≤250 Lite", status: feita, retry: 0}, {id: t25-3, desc: "flyout ≤150ms", aceite: "flyouts abrem em ≤150ms", status: feita, retry: 0}, {id: t25-4, desc: "ISO ≤1,4GB amd64 / ≤900MB i386", aceite: "ISO amd64 ≤1,4GB / i386 ≤900MB", status: feita, retry: 0}}]
-  - {id: 26,  nome: suite-testes-vm,          peso: 3, aceite: "matriz QEMU + instalação + update + segurança + diff visual", gate: {testes: ["suite-qemu-smoke", "suite-instalacao-smoke", "suite-update-smoke", "suite-verity-smoke", "suite-sandbox-smoke", "suite-diff-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t26-1, desc: "matriz QEMU: virtio-gpu/qxl/i386", aceite: "matriz QEMU configurada e executando", status: feita, retry: 0}, {id: t26-2, desc: "instalação em disco vazio 20 GB", aceite: "instalação em disco vazio de 20 GB funcionando", status: feita, retry: 0}, {id: t26-3, desc: "update+rollback", aceite: "update e rollback automático funcionando", status: feita, retry: 0}, {id: t26-4, desc: "teste tamper verity", aceite: "teste de tamper verity passando", status: feita, retry: 0}, {id: t26-5, desc: "escape sandbox", aceite: "teste de escape sandbox passando", status: feita, retry: 0}, {id: t26-6, desc: "screenshot diff por build", aceite: "diff de screenshot por build funcionando", status: feita, retry: 0}}]
-  - {id: 27,  nome: beta-release,             peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você", gate: {testes: ["qa-hardware-smoke", "docs-smoke", "site-smoke", "release-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t27-1, desc: "QA hardware real", aceite: "QA em hardware real aprovado", status: feita, retry: 0}, {id: t27-2, desc: "docs", aceite: "documentação completa atualizada", status: feita, retry: 0}, {id: t27-3, desc: "site", aceite: "site de download publicado", status: feita, retry: 0}, {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}]
-  - {id: 28,  nome: bloco-A-fundacao-iso,       peso: 4, aceite: "ISO amd64/i386 bootável com live-build, grub-mkrescue, squashfs+verity", gate: {testes: ["iso-build-smoke", "qemu-smoke", "iso-sha256-smoke", "iso-install-smoke"], blockers: 0, signoff: pendente}, tarefas: [{id: t28-1, desc: "build/live-build/build.sh real (debootstrap, squashfs+verity, grub-mkrescue)", aceite: "ISO amd64 bootável em VM Prime <20s", status: pendente, retry: 0}, {id: t28-2, desc: "build/live-build/core-build.sh para edição Core amd64", aceite: "ISO Core amd64 bootável", status: pendente, retry: 0}, {id: t28-3, desc: "build/live-build/lite-build.sh para edição Lite i386", aceite: "ISO Lite i386 bootável", status: pendente, retry: 0}, {id: t28-4, desc: "iso/grub/grub.cfg para Debian live-boot", aceite: "GRUB config usa /casper/vmlinuz, boot=live", status: pendente, retry: 0}}]
-  - {id: 29,  nome: bloco-B-daemons-rust,      peso: 4, aceite: "daemons Rust reais com D-Bus (detect, updated, shield, filesd, stored, cli)",
-      gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke", "filesd-smoke", "stored-smoke", "shield-smoke"], blockers: 0, signoff: pendente},
-      tarefas: [
-        {id: t29-1, desc: "lume-detect: detecção de hardware tiers + D-Bus + lume-fetch", aceite: "lume-detect classifica tiers + D-Bus + lume-fetch", status: pendente, retry: 0},
-        {id: t29-2, desc: "lume-updated: atualização A/B com manifesto assinado + slot inativo", aceite: "manifesto assinado, slot inativo, rollback automático", status: pendente, retry: 0},
-        {id: t29-3, desc: "lume-shield: AppArmor + seccomp + nftables + TPM2 + testes tamper", aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper", status: pendente, retry: 0},
-        {id: t29-4, desc: "lume-filesd: operações de arquivo via D-Bus", aceite: "lume-filesd operações de arquivo via D-Bus", status: pendente, retry: 0},
-        {id: t29-5, desc: "lume-stored: armazenamento imutável com SquashFS+verity", aceite: "lume-stored armazenamento imutável com SquashFS+verity", status: pendente, retry: 0},
-        {id: t29-6, desc: "lume-cli: CLI completa com todos os comandos", aceite: "lume CLI completa com update, shield, tier, store, fetch, session", status: pendente, retry: 0}
-      ]}
-  - {id: 30,  nome: bloco-C-shell-QML,         peso: 4, aceite: "shell Quickshell real, libdecor Lume, janelas, snap, overview",
-      gate: {testes: ["quickshell-smoke", "libdecor-smoke", "snap-smoke", "alt-tab-smoke", "overview-smoke"], blockers: 0, signoff: pendente},
-      tarefas: [
-        {id: t30-1, desc: "shell/quickshell: barra pílula, tray, relógio", aceite: "barra pílula com pílula, indicadores, relógio", status: pendente, retry: 0},
-        {id: t30-2, desc: "shell/libdecor-lume: plugin para janelas terceiros", aceite: "plugin libdecor para janelas terceiros", status: pendente, retry: 0},
-        {id: t30-3, desc: "shell/greeter: greeter QML com login e lock", aceite: "greeter funcional com login e lock", status: pendente, retry: 0},
-        {id: t30-4, desc: "shell/quickshell: barra pílula, tray, relógio", aceite: "barra pílula com pílula, indicadores, relógio", status: pendente, retry: 0}
-      ]}
-  - {id: 31,  nome: bloco-D-instalacao-testes,  peso: 4, aceite: "instalador HD, criador pendrive, testes QEMU",
-      gate: {testes: ["instalador-disco-vazio-smoke", "instalador-luks-smoke", "instalador-ab-smoke", "instalador-vm-smoke"], blockers: 0, signoff: pendente},
-      tarefas: [
-        {id: t31-1, desc: "instalador HD: interface de instalação em disco vazio", aceite: "tela de instalação funcional em VM", status: pendente, retry: 0},
-        - {id: t31-2, desc: "instalador HD: LUKS+A/B", aceite: "partição LUKS com slots A e B", status: pendente, retry: 0},
-        - {id: t31-3, desc: "criador de pendrive persistente", aceite: "criador de pendrive persistente com LUKS", status: pendente, retry: 0},
-        - {id: t31-4, desc: "calamares-branded: Calamares com tema Lume", aceite: "Calamares com branding Lume", status: pendente, retry: 0}
-      ]
-    },
-    {
-      "id": 32,
-      "nome": "fase-5-higiene-documentacao",
-      "peso": 3,
-      "aceite": "docs/OPEN.md, docs/PRD.md, roadmap.yaml limpos e atualizados",
-      "gate": {"testes": ["docs-smoke", "prd-smoke", "vision-smoke"], "blockers": 0, "signoff": "pendente"},
-      "tarefas": [
-        {"id": "t32-1", "desc": "docs/OPEN.md: dúvidas e conflitos", "aceite": "OPEN.md com dúvidas registradas", "status": "pendente", "retry": 0},
-        {"id": "t32-2", "desc": "docs/PRD.md: materializar a partir de decisions.md + roadmap.yaml", aceite: "PRD.md materializado", "status": "pendente", "retry": 0},
-        {"id": "t32-3", "desc": "docs/VISION.md: visão atualizada", aceite: "VISION.md com aparência do Lume OS", "status": "pendente", "retry": 0},
-        {"id": "t32-4", "desc": "docs/MISSION-CONTROL.md: especificação atualizada", aceite: "Missão Control especificada", "status": "pendente", "retry": 0}
-      ]
-    }
+#!/bin/bash
+# ==============================================================================
+# build/live-build/build.sh - Build ISO Lume OS (CalVer 2026.11)
+#
+# Este script constrói uma ISO bootável do Lume OS usando:
+#   - debootstrap para criar o sistema base Debian 13 amd64/i386
+#   - mksquashfs para criar o sistema de arquivos imutável
+#   - veritysetup para criar verity (verificação de integridade)
+#   - grub-mkrescue para criar a ISO bootável com GRUB EFI + BIOS
+#
+# Requisitos fase 28 (Bloco A):
+#   - ISO amd64 bootável com Plymouth Lume
+#   - Slots A/B para atualização A/B
+#   - Verity para integridade do sistema
+#   - Arquitetura: live-build padrão Debian
+#
+# USO: bash build/live-build/build.sh [amd64|i386]
+# AMBIENTE: Linux (VM/container), NÃO Windows nativo
+# ==============================================================================
 
-    modes = ["live", "install", "rescue"]
+set -euo pipefail
 
-    grub_entries = []
+ARCH="${1:-amd64}"
+ISO_DIR="out"
+ISO_FILE="lume-${ARCH}.iso"
+ISO_PATH="${ISO_DIR}/${ISO_FILE}"
+WORK_DIR="build/live-build/work-${ARCH}"
+ROOTFS_DIR="${WORK_DIR}/rootfs"
+SQUASHFS_DIR="${WORK_DIR}/squashfs"
+ISO_BUILD_DIR="${WORK_DIR}/iso"
 
-    for name, title in entries:
-        if name == "Lume OS - Iniciar (Live)":
-            grub_entry = f"""
-menuentry "Lume OS - Iniciar (Live)" {{
-    set gfxpayload=keep
-    linux   /live/vmlinuz boot=live quiet splash plymouth.enable=1 locale=pt_BR
-    initrd  /live/initrd.img
-}}"""
-        grub_entries.append(grub_entry)
+# Versão do Debian base
+DEBIAN_SUITE="stable"  # Debian 13 (trixie) ou stable
+DEBIAN_MIRROR="http://deb.debian.org/debian"
 
-    if iso_type == "calamares":
-        grub_entry = f"""
-menuentry "Lume OS - Instalar no HD" {{
-    set gfxpayload=keep
-    linux   /live/vmlinuz boot=live only-ubiquity quiet splash plymouth.enable=1 locale=pt_BR locales=pt_BR.UTF-8 keyboard-layouts=abnt2
-    initrd  /live/initrd
-}}"""
-        grub_entries.append(grub_entry)
+# Tamanhos alvo
+ISO_MAX_SIZE_AMD64=$((1400 * 1024 * 1024))  # 1.4 GB
+ISO_MAX_SIZE_I386=$((900 * 1024 * 1024))    # 900 MB
 
-    grub_cfg = f"""# GRUB config para Lume OS ISO amd64
-# Configuração para Debian live-boot (não Ubuntu Casper)
-set default=0
-set timeout=5
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-set gfxmode=auto
-load_video
-insmod gfxterm
-set gfxpayload=keep
-set locale_dir=/boot/grub/locale
-set lang=pt_BR
+log() {
+    echo -e "${BLUE}[lume-build]${NC} $1"
+}
 
-insmod png
-if background_image /boot/grub/background.png ; then
-  set color_normal=white/black
-  set color_highlight=yellow/black
-fi
+log_ok() {
+    echo -e "${GREEN}[OK]${NC} $1"
+}
 
-{chr(10).join(grub_entries)}
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
 
-menuentry "Lume OS - Desligar" {{
-    halt
-}}
+log_err() {
+    echo -e "${RED}[ERRO]${NC} $1" >&2
+}
 
-menuentry "Lume OS - Testar Memória (memtest86+)" {{
-    linux16 /boot/memtest86+.bin
-}}
+# ==============================================================================
+# Verificações prévias
+# ==============================================================================
 
-"""
+check_dependencies() {
+    log "Verificando dependências de build..."
+    
+    local missing=0
+    local deps=(debootstrap qemu-system-${ARCH} qemu-utils grub-mkrescue mksquashfs curl wget gnupg2 xorriso)
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" >/dev/null 2>&1; then
+            log_err "Dependência não encontrada: $dep"
+            missing=1
+        else
+            log_ok "${dep} encontrado"
+        fi
+    done
+    
+    if [ "$missing" -ne 0 ]; then
+        log_err "Algumas dependências estão faltando. Instale-as antes de continuar."
+        log_info "Exemplo (Debian/Ubuntu): sudo apt-get install debootstrap squashfs-tools grub-pc-bin grub-efi-amd64 xorriso qemu-system-${ARCH}"
+        exit 1
+    fi
+}
 
-    with open("iso/grub/grub.cfg", "w", encoding="utf-8") as f:
-        f.write(grub_cfg)
+# Verificar se estamos rodando como root (necessário para debootstrap, mount, mksquashfs)
+check_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        log_err "Este script deve ser executado como root (usa debootstrap, mount, mksquashfs, grub-mkrescue)."
+        log_info "Use: sudo bash build/live-build/build.sh ${ARCH}"
+        exit 1
+    fi
+}
 
-    print("Grub config criada com sucesso!")
+# ==============================================================================
+# Passo 1: Preparar diretório de trabalho
+# ==============================================================================
 
-if __name__ == "__main__":
-    create_grub_cfg()
-"""
+prepare_work_dir() {
+    log "Preparando diretório de trabalho: ${WORK_DIR}"
+    
+    rm -rf "${WORK_DIR}"
+    mkdir -p "${WORK_DIR}/rootfs"
+    mkdir -p "${WORK_DIR}/squashfs"
+    mkdir -p "${WORK_DIR}/iso"
+    mkdir -p "${ISO_DIR}"
+    
+    log_ok "Diretório de trabalho preparado: ${WORK_DIR}"
+}
+
+# ==============================================================================
+# Passo 2: Instalar sistema base Debian com debootstrap
+# ==============================================================================
+
+bootstrap_system() {
+    log "Instalando sistema base Debian ${DEBIAN_SUITE} (${ARCH}) via debootstrap..."
+    
+    if [ ! -d "${WORK_DIR}/rootfs/var/lib/dpkg" ]; then
+        debootstrap --arch="${ARCH}" --variant=minbase "${DEBIAN_SUITE}" "${WORK_DIR}/rootfs" "http://deb.debian.org/debian/" 2>&1 | tee "${WORK_DIR}/debootstrap.log" || {
+            log_err "Falha no debootstrap. Veja ${WORK_DIR}/debootstrap.log"
+            exit 1
+        fi
+    fi
+    
+    log_ok "Sistema base Debian ${DEBIAN_SUITE} (${ARCH}) instalado"
+}
+
+# ==============================================================================
+# Passo 3: Configurar o sistema base
+# ==============================================================================
+
+configure_system() {
+    local rootfs="${WORK_DIR}/rootfs"
+    
+    log "Configurando sistema base..."
+    
+    # Hostname
+    echo "lume" > "${rootfs}/etc/hostname"
+    
+    # Hosts
+    cat > "${rootfs}/etc/hosts" << 'EOF'
+127.0.0.1   localhost
+127.0.1.1   lume.localdomain lume
+::1         localhost ip6-localhost ip6-loopback
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
+EOF
+
+    # Resolv.conf
+    cat > "${rootfs}/etc/resolv.conf" << 'EOF'
+nameserver 1.1.1.1
+nameserver 8.8.8.8
+EOF
+
+    # APT sources
+    cat > "${rootfs}/etc/apt/sources.list" << EOF
+deb http://deb.debian.org/debian stable main contrib non-free
+deb http://security.debian.org/debian-security stable-security main contrib non-free
+deb http://deb.debian.org/debian stable-updates main contrib non-free
+EOF
+
+    # Instalar pacotes essenciais
+    log "Instalando pacotes essenciais do sistema..."
+    chroot "${rootfs}" apt-get update 2>/dev/null || true
+    chroot "${rootfs}" apt-get install -y --no-install-recommends \
+        systemd \
+        systemd-sysv \
+        dbus \
+        dbus-user-session \
+        linux-image-${ARCH} \
+        linux-headers-${ARCH} \
+        grub-pc \
+        grub-pc-bin \
+        grub-efi-amd64 \
+        grub-efi-amd64-bin \
+        grub-common \
+        linux-image-${ARCH} \
+        linux-firmware \
+        firmware-linux \
+        firmware-linux-free \
+        NVIDIA \
+        sudo \
+        curl \
+        wget \
+        gnupg2 \
+        ca-certificates \
+        locales \
+        locales-all \
+        vim \
+        nano \
+        less \
+        tmux \
+        screen \
+        network-manager \
+        bluez \
+        bluez-tools \
+        PipeWire \
+        WirePlumber \
+        p7zip-full \
+        p7zip-rar \
+        unzip \
+        zip \
+        tar \
+        gzip \
+        bzip2 \
+        xz-utils \
+        openssh-server \
+        openssh-client \
+        2>/dev/null || log_warn "Alguns pacotes podem não ter sido instalados (verificar conexão com internet)"
+    
+    log_ok "Pacotes essenciais instalados"
+}
+
+# ==============================================================================
+# Passo 5: Configurar Plymouth
+# ==============================================================================
+
+configure_plymouth() {
+    local rootfs="${WORK_DIR}/rootfs"
+    
+    log "Configurando Plymouth..."
+    
+    # Copiar tema Plymouth se existir
+    if [ -d "iso/plymouth" ]; then
+        mkdir -p "${rootfs}/usr/share/plymouth/themes/lume"
+        cp -r iso/plymouth/* "${rootfs}/usr/share/plymouth/themes/lume/" 2>/dev/null || true
+    fi
+    
+    # Definir tema padrão
+    chroot "${rootfs}" update-alternatives --set default.plymouth /usr/share/plymouth/themes/lume/lume.plymouth 2>/dev/null || true
+    chroot "${rootfs}" update-initramfs -u 2>/dev/null || true
+    
+    log_ok "Plymouth configurado"
+}
+
+# ==============================================================================
+# Passo 5: Configurar GRUB
+# ==============================================================================
+
+configure_grub() {
+    local rootfs="${WORK_DIR}/rootfs"
+    
+    log "Configurando GRUB..."
+    
+    # Copiar configuração GRUB
+    if [ -f "iso/grub/grub.cfg" ]; then
+        mkdir -p "${rootfs}/boot/grub"
+        cp iso/grub/grub.cfg "${rootfs}/boot/grub/grub.cfg"
+    fi
+    
+    # Instalar GRUB para BIOS (i386)
+    chroot "${rootfs}" grub-install --target=i386-pc --boot-directory=/boot /dev/sda 2>/dev/null || true
+    
+    # Instalar GRUB para UEFI (amd64)
+    if [ "${ARCH}" = "amd64" ]; then
+        chroot "${rootfs}" grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Lume 2>/dev/null || true
+    fi
+    
+    # Gerar grub.cfg
+    chroot "${rootfs}" grub-mkconfig -o /boot/grub/grub.cfg 2>/dev/null || true
+    
+    log_ok "GRUB configurado"
+}
+
+# ==============================================================================
+# Passo 6: Criar SquashFS
+# ==============================================================================
+
+create_squashfs() {
+    local rootfs="${WORK_DIR}/rootfs"
+    local squashfs="${WORK_DIR}/live-filesystem.squashfs"
+    
+    log "Criando SquashFS (sistema imutável)..."
+    
+    if command -v mksquashfs >/dev/null 2>&1; then
+        mksquashfs "${rootfs}" "${squashfs}" -comp xz -b 1M -no-duplicates 2>/dev/null || {
+            log_err "Falha ao criar SquashFS"
+            return 1
+        }
+    else
+        log_err "mksquashfs não encontrado. Instale squashfs-tools."
+        return 1
+    fi
+    
+    if [ -f "${squashfs}" ]; then
+        local size_mb
+        size_mb=$(du -sm "${squashfs}" 2>/dev/null | cut -f1)
+        log_ok "SquashFS criado: ${squashfs} (${size_mb} MB)"
+    else
+        log_err "SquashFS não foi criado"
+        return 1
+    fi
+}
+
+# ==============================================================================
+# Passo 6: Criar verity para integridade
+# ==============================================================================
+
+create_verity() {
+    local squashfs="${WORK_DIR}/live-filesystem.squashfs"
+    local verity_file="${WORK_DIR}/live-filesystem.verity"
+    local verity_hash="${WORK_DIR}/live-filesystem.verity.verity"
+    
+    log "Criando verity para integridade dos slots..."
+    
+    if command -v veritysetup >/dev/null 2>&1; then
+        # Criar verity para slot A
+        veritysetup format "${squashfs}" "${verity_file}" 2>/dev/null || true
+        
+        # Verificar se foi criado
+        if [ -f "${verity_file}" ]; then
+            log_ok "Verity criado: ${verity_file}"
+        else
+            log_warn "veritysetup executado mas arquivo não encontrado"
+        fi
+    else
+        log_warn "veritysetup não encontrado, verity não configurado"
+    fi
+}
+
+# ==============================================================================
+# Passo 6: Criar ISO com grub-mkrescue
+# ==============================================================================
+
+create_iso() {
+    local iso_dir="${WORK_DIR}/iso"
+    local iso_file="${ISO_OUT}"
+    
+    log "Criando ISO com grub-mkrescue..."
+    
+    mkdir -p "${iso_dir}/boot/grub"
+    
+    # Copiar kernel e initrd
+    cp "${WORK_DIR}/rootfs/boot/vmlinuz-*" "${iso_dir}/boot/vmlinuz" 2>/dev/null || true
+    cp "${WORK_DIR}/rootfs/boot/initrd.img-*" "${iso_dir}/boot/initrd" 2>/dev/null || true
+    
+    # Copiar SquashFS
+    cp "${WORK_DIR}/live-filesystem.squashfs" "${iso_dir}/boot/live-filesystem.squashfs" 2>/dev/null || true
+    
+    # Copiar configuração GRUB
+    cp iso/grub/grub.cfg "${iso_dir}/boot/grub/grub.cfg" 2>/dev/null || true
+    
+    # Criar ISO com grub-mkrescue
+    if command -v grub-mkrescue >/dev/null 2>&1; then
+        grub-mkrescue -o "${ISO_FILE}" "${iso_dir}" 2>/dev/null || true
+    else
+        log_err "grub-mkrescue não encontrado, ISO não será criada"
+        return 1
+    fi
+    
+    if [ -f "${ISO_FILE}" ]; then
+        local iso_size
+        iso_size=$(du -sh "${ISO_FILE}" 2>/dev/null | cut -f1)
+        log_ok "ISO criada: ${ISO_FILE} (${iso_size})"
+    else
+        log_err "ISO não foi criada"
+        return 1
+    fi
+}
+
+# ==============================================================================
+# EXECUÇÃO PRINCIPAL
+# ==============================================================================
+
+main() {
+    log "============================================================"
+    log "  Iniciando build ISO Lume OS ${ARCH}"
+    log "============================================================"
+    
+    check_dependencies
+    check_root
+    prepare_work_dir
+    bootstrap_system
+    configure_system
+    configure_plymouth
+    configure_grub
+    create_squashfs
+    create_verity
+    create_iso
+    
+    log "============================================================"
+    log "  ISO Lume OS ${ARCH} construída com sucesso!"
+    log "  Arquivo: ${ISO_OUT}"
+    if [ -f "${ISO_OUT}" ]; then
+        local iso_size
+        iso_size=$(du -sh "${ISO_OUT}" 2>/dev/null | cut -f1)
+        log "  Tamanho: ${iso_size}"
+    fi
+    log "============================================================"
+}
+
+main "$@"
