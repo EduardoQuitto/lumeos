@@ -1,6 +1,5 @@
 name: ci
 on: [push, schedule]
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -14,11 +13,7 @@ jobs:
         arch: [amd64, i386]
     steps:
       - uses: actions/checkout@v4
-      - name: Instalar dependências de build
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y debootstrap qemu-system-${{ matrix.arch }} qemu-utils grub-pc-bin grub-efi-amd64 mksquashfs curl wget gnupg2
-      - run: bash build/live-build/build.sh ${{ matrix.arch }}
+      - run: podman run --rm -v $PWD:/w debian:12 bash /w/build/live-build/build.sh ${{ matrix.arch }}
       - run: bash tests/qemu/smoke.sh ${{ matrix.arch }}
       - uses: actions/upload-artifact@v4
         with:

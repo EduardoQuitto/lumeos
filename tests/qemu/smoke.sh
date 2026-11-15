@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # tests/qemu/smoke.sh - CI QEMU smoke test para Lume OS ISO amd64/i386
-# Requisitos fase 26:
+# Requisitos fase 28:
 #   - boot QEMU <20s em VM Prime / <30s em VM real B
 #   - screendump QMP salvo em design/shots/2/
 #   - Executa em VM/container Linux (não no host Windows)
@@ -16,7 +16,7 @@ ISO_PATH="${ISO_DIR}/${ISO_FILE}"
 QMP_PORT="4446"
 PID_FILE="/tmp/lume-qemu-smoke-${ARCH}.pid"
 SCREENSHOT="${SHOTS_DIR}/boot-${ARCH}.png"
-BOOT_TIMEOUT="${QEMU_BOOT_TIMEOUT:-60}"  # segundos
+BOOT_TIMEOUT="${QEMU_BOOT_TIMEOUT:-60}"
 
 mkdir -p "$SHOTS_DIR"
 
