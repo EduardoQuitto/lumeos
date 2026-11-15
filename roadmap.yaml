@@ -165,20 +165,4 @@ fases:
                 {id: t27-2, desc: "docs", aceite: "documenta��o completa atualizada", status: pendente, retry: 0},
                 {id: t27-3, desc: "site", aceite: "site de download publicado", status: feita, retry: 0},
                 {id: t27-4, desc: "release 0.1 assinada", aceite: "release 0.1 assinada pelo dono", status: feita, retry: 0}}]
-  - {id: 28,  nome: bloco-A-fundacao-iso,       peso: 4, aceite: "ISO amd64/i386 bootável com live-build, grub-mkrescue, squashfs+verity",
-     gate: {testes: ["iso-build-smoke", "qemu-smoke", "iso-sha256-smoke", "iso-install-smoke"], blockers: 0, signoff: pendente},
-     tarefas: [{id: t28-1, desc: "build/live-build/build.sh real (debootstrap, squashfs+verity, grub-mkrescue)", aceite: "ISO amd64 bootável em VM Prime <20s", status: feita, retry: 0},
-               {id: t28-2, desc: "build/live-build/core-build.sh para edição Core amd64", aceite: "ISO Core amd64 bootável", status: feita, retry: 0},
-               {id: t28-3, desc: "build/live-build/lite-build.sh para edição Lite i386", aceite: "ISO Lite i386 bootável", status: feita, retry: 0},
-               {id: t28-4, desc: "iso/grub/grub.cfg para Debian live-boot", aceite: "GRUB config usa /casper/vmlinuz, boot=live", status: feita, retry: 0}}]
-  - {id: 29,  nome: bloco-B-daemons-rust,      peso: 4, aceite: "daemons Rust reais com D-Bus (detect, updated, shield, filesd, stored, cli)",
-      gate: {testes: ["detect-smoke", "dbus-smoke", "lume-fetch-smoke", "filesd-smoke", "stored-smoke", "shield-smoke"], blockers: 0, signoff: pendente},
-      tarefas: [
-        {id: t29-1, desc: "lume-detect: detecção de hardware tiers (CPU/RAM/GPU/VA-API/VM)", aceite: "lume-detect classifica tiers + D-Bus + lume-fetch", status: pendente, retry: 0},
-        {id: t29-2, desc: "lume-updated: atualização A/B com manifesto assinado", aceite: "manifesto assinado, slot inativo, rollback automático", status: pendente, retry: 0},
-        {id: t29-3, desc: "lume-shield: AppArmor, seccomp, nftables, D-Bus", aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper", status: pendente, retry: 0},
-        {id: t29-4, desc: "lume-filesd: operações de arquivo via D-Bus", aceite: "lume-filesd operações de arquivo via D-Bus", status: pendente, retry: 0},
-        {id: t29-5, desc: "lume-stored: armazenamento imutável com SquashFS+verity", aceite: "lume-stored armazenamento imutável com SquashFS+verity", status: pendente, retry: 0},
-        {id: t29-6, desc: "lume-cli: CLI completa com todos os comandos", aceite: "lume CLI completa com update, shield, tier, store, fetch, session", status: feita, retry: 0}}
-      ]}
 

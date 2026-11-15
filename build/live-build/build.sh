@@ -22,8 +22,8 @@ set -euo pipefail
 
 ARCH="${1:-amd64}"
 ISO_DIR="out"
-ISO_FILE="lume-${ARCH}.iso"
-ISO_PATH="${ISO_DIR}/${ISO_FILE}"
+ISO_PATH="lume-${ARCH}.iso"
+ISO_PATH="${ISO_DIR}/${ISO_PATH}"
 WORK_DIR="build/live-build/work-${ARCH}"
 ROOTFS_DIR="${WORK_DIR}/rootfs"
 SQUASHFS_DIR="${WORK_DIR}/squashfs"
@@ -181,7 +181,6 @@ EOF
         linux-firmware \
         firmware-linux \
         firmware-linux-free \
-        NVIDIA \
         sudo \
         curl \
         wget \
@@ -197,8 +196,8 @@ EOF
         network-manager \
         bluez \
         bluez-tools \
-        PipeWire \
-        WirePlumber \
+        pipewire \
+        wireplumber \
         p7zip-full \
         p7zip-rar \
         unzip \
@@ -251,8 +250,8 @@ configure_grub() {
         cp iso/grub/grub.cfg "${rootfs}/boot/grub/grub.cfg"
     fi
     
-    # Instalar GRUB para BIOS (i386)
-    chroot "${rootfs}" grub-install --target=i386-pc --boot-directory=/boot /dev/sda 2>/dev/null || true
+    # GRUB para BIOS (i386) — instalado via grub-mkrescue na criação da ISO
+    # (não grava em disco real, conforme regra #5 do AGENTS.md)
     
     # Instalar GRUB para UEFI (amd64)
     if [ "${ARCH}" = "amd64" ]; then
@@ -327,7 +326,7 @@ create_verity() {
 
 create_iso() {
     local iso_dir="${WORK_DIR}/iso"
-    local iso_file="${ISO_OUT}"
+    local iso_file="${ISO_PATH}"
     
     log "Criando ISO com grub-mkrescue..."
     
@@ -345,16 +344,16 @@ create_iso() {
     
     # Criar ISO com grub-mkrescue
     if command -v grub-mkrescue >/dev/null 2>&1; then
-        grub-mkrescue -o "${ISO_FILE}" "${iso_dir}" 2>/dev/null || true
+        grub-mkrescue -o "${ISO_PATH}" "${iso_dir}" 2>/dev/null || true
     else
         log_err "grub-mkrescue não encontrado, ISO não será criada"
         return 1
     fi
     
-    if [ -f "${ISO_FILE}" ]; then
+    if [ -f "${ISO_PATH}" ]; then
         local iso_size
-        iso_size=$(du -sh "${ISO_FILE}" 2>/dev/null | cut -f1)
-        log_ok "ISO criada: ${ISO_FILE} (${iso_size})"
+        iso_size=$(du -sh "${ISO_PATH}" 2>/dev/null | cut -f1)
+        log_ok "ISO criada: ${ISO_PATH} (${iso_size})"
     else
         log_err "ISO não foi criada"
         return 1
@@ -383,10 +382,10 @@ main() {
     
     log "============================================================"
     log "  ISO Lume OS ${ARCH} construída com sucesso!"
-    log "  Arquivo: ${ISO_OUT}"
-    if [ -f "${ISO_OUT}" ]; then
+    log "  Arquivo: ${ISO_PATH}"
+    if [ -f "${ISO_PATH}" ]; then
         local iso_size
-        iso_size=$(du -sh "${ISO_OUT}" 2>/dev/null | cut -f1)
+        iso_size=$(du -sh "${ISO_PATH}" 2>/dev/null | cut -f1)
         log "  Tamanho: ${iso_size}"
     fi
     log "============================================================"

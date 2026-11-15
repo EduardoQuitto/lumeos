@@ -92,10 +92,10 @@ Write-Host "[Gate] Fase 29 — blockers 0 no Mission Control"
 try {
     $state = Invoke-RestMethod -Uri "http://localhost:7777/api/state" -TimeoutSec 5 -ErrorAction Stop
     $f29 = $state.fases | Where-Object { $_.id -eq 29 }
-    if ($f24) {
-        if ($f24.gate.blockers -eq 0) { Pass("Gate fase 24 GREEN: blockers = 0") } else { Fail("Gate fase 24: blockers = " + $f24.gate.blockers) }
+    if ($f29) {
+        if ($f29.gate.blockers -eq 0) { Pass("Gate fase 29 GREEN: blockers = 0") } else { Fail("Gate fase 29: blockers = " + $f29.gate.blockers) }
     } else {
-        Fail("Fase 24 não encontrada no state")
+        Fail("Fase 29 não encontrada no state")
     }
 } catch {
     Fail("Não foi possível consultar /api/state: " + $_.Exception.Message)

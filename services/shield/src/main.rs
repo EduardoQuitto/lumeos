@@ -1,22 +1,25 @@
+mod dbus;
+
 use chrono::Utc;
 use rusqlite::{Connection, params};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
+use tokio;
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ShieldStatus {
-    pub verity: bool,
+    pub verifica_tegridade: bool,
     pub lockdown: bool,
     pub apparmor: bool,
     pub seccomp: bool,
     pub nftables: bool,
     pub tpm2: bool,
-    pub geral: bool,
+    pub ultimo_verificacao: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ShieldStatus {
+pub struct EscudoEstado {
     pub verifica_tegridade: bool,
     pub lockdown: bool,
     pub apparmor: bool,
@@ -189,7 +192,7 @@ impl Shield {
         false
     }
 
-    pub fn obter_estado(&self) -> Result<EscudoEstado, Box<dyn std::error::Error>> {
+    pub fn obter_estado(&mut self) -> Result<EscudoEstado, Box<dyn std::error::Error>> {
         Ok(EscudoEstado {
             verifica_tegridade: self.verificar_verity()?,
             lockdown: self.verificar_lockdown()?,
@@ -284,4 +287,12 @@ fn main() {
     }
 
     println!("\nEscudo Lume inicializado com sucesso!");
+
+    // Iniciar serviço D-Bus
+    if let Ok(rt) = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+    {
+        let _ = rt.block_on(dbus::run_dbus_service());
+    }
 }

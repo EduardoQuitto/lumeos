@@ -1,6 +1,9 @@
+mod dbus;
+
 use clap::{Parser, Subcommand};
 use serde::{Deserialize, Serialize};
 use std::process::Command;
+use tokio;
 
 #[derive(Parser, Debug)]
 #[command(name = "lume", about = "Lume OS CLI - Gerenciamento do Sistema")]
@@ -254,5 +257,13 @@ fn main() {
                 }
             }
         }
+    }
+
+    // Iniciar cliente D-Bus para demonstrar integração com serviços
+    if let Ok(rt) = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+    {
+        let _ = rt.block_on(dbus::run_cli_dbus_demo());
     }
 }

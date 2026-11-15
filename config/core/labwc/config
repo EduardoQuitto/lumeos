@@ -1,45 +1,43 @@
-# labwc config — Compositor Wayland para Lume OS Core amd64
-# Materiais: Névoa + Sólido + sombras (2 camadas)
+# labwc config — Lume OS Core Edition
+# Materiais: Névoa + Sólido + sombras
+# Idle target: ≤350 MB
 
-# Teclas de atalho
-bind = SUPER, Q, exec, foot
-bind = SUPER, E, exec, lume-files
-bind = SUPER, S, exec, lume-settings
-bind = SUPER, L, exec, lume-shield --lock
-bind = SUPER, D, exec, sudo systemctl poweroff
-bind = SUPER, R, exec, sudo systemctl reboot
-bind = SUPER, TAB, exec, lume-overview
-bind = ALT, TAB, exec, lume-alt-tab
+# Wayland compositor
+xwayland = true
 
-# Snap layouts
-bind = SUPER, LEFT, snap, left
-bind = SUPER, RIGHT, snap, right
-bind = SUPER, UP, snap, top
-bind = SUPER, DOWN, snap, bottom
+# Lacros-style decorations enabled
+decoration = {
+  border_size = 1
+  border_color = #1e293b
+  active_border_color = #3E8EF7
+  active_text_color = #F7F9FC
+  inactive_text_color = #94A3B8
+  titlebar_height = 40
+  font_family = Inter
+  font_size = 13
+}
 
-# Configurações gerais
-focus_follows_mouse = true
-focus_wraps = true
-empty_border = true
-empty_padding = 5
+# Lume themes
+theme {
+  surfaces = [ "Névoa", "Sólido" ]
+  shadow_layers = 2
+  border_radius = 12
+  blur_enabled = true
+  blur_passes = 3
+}
 
-# Decorações de janela
-border_width = 2
-border_color = #1e293b
-border_color_focused = #3e8ef7
+# Keybindings
+bindmod = Super
 
-# Sombras (2 camadas para Core)
-shadow_color = #000000
-shadow_blur = 8
-shadow_offset_x = 4
-shadow_offset_y = 4
-shadow_opacity = 0.3
+bind {
+  bindmod, Q, exec, lume-files
+  bindmod, I, exec, lume-settings
+  bindmod, T, exec, foot
+  bindmod, L, exec, loginctl lock-session
+  bindmod, Tab, exec, lume-overview
+  bindmod, A, exec, lume-alt-tab
+}
 
-# Painéis/barcos
-bar = /usr/share/lume/config/core/labwc-bar.sh
-
-# Início automático
-# Exec = picom --config /etc/xdg/picom.conf &
-# Exec = swaybg --image /usr/share/lume/wallpapers/aurora-peaks/dark/aurora-peaks_dark.jpg &
-# Exec = nm-applet &
-# Exec = blueman-applet &
+# Startup
+exec-once = openbox --config-file /etc/xdg/openbox/lume-core-rc.xml
+exec-once = picom --config /usr/share/lume/config/lite/picom.conf --backend glx --daemon

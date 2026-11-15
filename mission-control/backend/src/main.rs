@@ -11,6 +11,7 @@ use clap::Parser;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::env;
+use std::fs;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -42,7 +43,9 @@ struct Fase {
     peso: u32,
     aceite: String,
     gate: Gate,
+    #[serde(default)]
     tarefas: Vec<Tarefa>,
+    #[serde(default)]
     pct: f64,
 }
 
@@ -231,54 +234,15 @@ impl Backend {
     }
 }
 
+#[derive(Deserialize)]
+struct Roadmap {
+    fases: Vec<Fase>,
+}
+
 fn carregar_fases_roadmap() -> Vec<Fase> {
-    vec![
-        Fase {
-            id: 0,
-            nome: "fundacao-mission-control".into(),
-            peso: 4,
-            aceite: "painel :7777 com heartbeat + CI QEMU verde + PRD.md gerado".into(),
-            gate: Gate {
-                testes: vec!["backend-smoke".into(), "web-smoke".into(), "qemu-smoke".into()],
-                blockers: 0,
-                signoff: "pendente".into(),
-            },
-            tarefas: vec![
-                Tarefa { id: "t0-1".into(), desc: "backend axum+SQLite+SSE :7777".into(), aceite: "API /api/state, /api/events, /api/control, heartbeat funcionando".into(), status: "feita".into(), retry: 0 },
-                Tarefa { id: "t0-2".into(), desc: "web Svelte painel :7777".into(), aceite: "painel mostra fases, % global, tarefa atual, heartbeat, eventos, galeria shots".into(), status: "feita".into(), retry: 0 },
-                Tarefa { id: "t0-3".into(), desc: "tests/qemu/smoke.sh CI QEMU".into(), aceite: "boot QEMU <30s + screendump + ISO amd64/i386".into(), status: "pendente".into(), retry: 0 },
-                Tarefa { id: "t0-4".into(), desc: "systemd timer 5h + heartbeat por tarefa".into(), aceite: "timer 5h ativo, heartbeat publica a cada tarefa e a cada 60s em ops longas".into(), status: "pendente".into(), retry: 0 },
-            ],
-            pct: 50.0,
-        },
-        Fase { id: 1, nome: "design-system-assets".into(), peso: 4, aceite: "tokens + logo 6 variantes + cursor + wallpapers + sons".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 2, nome: "iso-amd64-boot".into(), peso: 4, aceite: "boot <20s + Plymouth + screenshot".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 3, nome: "daemons-rust-detect".into(), peso: 3, aceite: "tiers + D-Bus + lume-fetch".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 4, nome: "barra-tray-relogio".into(), peso: 4, aceite: "barra pílula + indicadores + locale".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 5, nome: "flyouts".into(), peso: 4, aceite: "4 painéis <150 ms".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 6, nome: "iniciar-busca".into(), peso: 3, aceite: "menu 640x560 + busca apps/arquivos/configs/cálculo".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 7, nome: "janelas-snap-overview".into(), peso: 4, aceite: "libdecor + 4 layouts + alt-tab + overview".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 8, nome: "lume-files".into(), peso: 4, aceite: "toolbar+breadcrumb+abas+busca+lixo+montagem+extração".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 9, nome: "settings-parte1".into(), peso: 4, aceite: "8 páginas: sistema/tela/som/rede/bt/personalização/apps/contas".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 10, nome: "settings-parte2-security".into(), peso: 4, aceite: "8 páginas + Central de Segurança com checklist Shield".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 11, nome: "terminal-cli".into(), peso: 3, aceite: "foot+starship+quake+command-not-found+CLI lume completa".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 12, nome: "loja".into(), peso: 4, aceite: "8 categorias + badges tier + fila + flatpak install/remove".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 13, nome: "essenciais-pwa-mime".into(), peso: 3, aceite: "OOBE 1-clique instala pacote + PWAs + MIME defaults".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 14, nome: "oobe-login-energia".into(), peso: 4, aceite: "OOBE+greeter+lock+telas desligar/reiniciar/atualizar".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 15, nome: "instalador-hd".into(), peso: 4, aceite: "instala em disco vazio VM com LUKS+A/B + teste instalação".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 16, nome: "pendrive-persistente".into(), peso: 3, aceite: "criador USB LUKS + backup/restore + teste instalação".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 17, nome: "edicao-lite-i386".into(), peso: 4, aceite: "ISO i386 boot + shell X11 + picom + idle ≤250MB".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 18, nome: "edicao-core".into(), peso: 3, aceite: "labwc+Quickshell + matriz materiais + idle ≤350MB".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 19, nome: "camada-windows".into(), peso: 4, aceite: "Wine+NTSYNC+garrafas bwrap + selos + 3 apps da lista rodando".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 20, nome: "jogos-nuvem".into(), peso: 3, aceite: "Steam/Proton B/C + Sober best-effort + PWAs nuvem por tier".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 21, nome: "shield-hardening".into(), peso: 4, aceite: "verity+lockdown+AppArmor+seccomp+nftables + testes tamper".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 22, nome: "modo-cofre".into(), peso: 3, aceite: "microVM descartável abre app de risco e销毁 sem resíduo".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 23, nome: "update-ab-github".into(), peso: 4, aceite: "manifesto assinado+slot B+rollback automático + teste update".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 24, nome: "i18n-a11y".into(), peso: 3, aceite: "pt/en 100% + Orca+alto contraste+movimento reduzido".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 25, nome: "passe-performance".into(), peso: 3, aceite: "budgets de boot/idle/flyout/ISO atingidos nos 3 tiers".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 26, nome: "suite-testes-vm".into(), peso: 3, aceite: "matriz QEMU + instalação + update + segurança + diff visual".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-        Fase { id: 27, nome: "beta-release".into(), peso: 3, aceite: "QA hardware real + docs + site + release 0.1 assinada por você".into(), gate: Gate { testes: vec![], blockers: 0, signoff: "pendente".into() }, tarefas: vec![], pct: 0.0 },
-    ]
+    let conteudo = fs::read_to_string("roadmap.yaml").expect("roadmap.yaml não encontrado");
+    let roadmap: Roadmap = serde_yaml::from_str(&conteudo).expect("falha ao fazer parse do roadmap.yaml");
+    roadmap.fases
 }
 
 fn calcular_pct_global(fases: &[Fase]) -> f64 {
@@ -436,8 +400,18 @@ async fn post_heartbeat(
     Ok(Json(serde_json::json!({"ok": true})))
 }
 
-async fn shots_handler(Path(_fase): Path<String>) -> Result<Json<Value>, StatusCode> {
-    Ok(Json(serde_json::json!({"shots": []})))
+async fn shots_handler(Path(fase): Path<String>) -> Result<Json<Value>, StatusCode> {
+    let shots_dir = format!("design/shots/{}", fase);
+    let mut shots: Vec<String> = Vec::new();
+    if let Ok(entries) = fs::read_dir(&shots_dir) {
+        for entry in entries.flatten() {
+            if let Some(nome) = entry.file_name().to_str() {
+                shots.push(format!("{}/{}", shots_dir, nome));
+            }
+        }
+    }
+    shots.sort();
+    Ok(Json(serde_json::json!({"shots": shots})))
 }
 
 async fn index_html(State(state): State<AppState>) -> Result<Html<String>, StatusCode> {

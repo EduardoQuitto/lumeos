@@ -114,9 +114,10 @@ fn detect_cpu() -> (u32, u32, String) {
     if let Ok(content) = fs::read_to_string("/proc/cpuinfo") {
         for line in content.lines() {
             if line.starts_with("model name") {
-                if let Some(name) = line.split(':').nth(1) {
-                    model = name.trim().to_string();
-                }
+            if let Some(name) = line.split(':').nth(1) {
+                let model = name.trim().to_string();
+                cpu_model = model;
+            }
             }
             if line.starts_with("processor") {
                 cpu_threads += 1;
@@ -132,7 +133,7 @@ fn detect_cpu() -> (u32, u32, String) {
     }
     if cpu_cores == 0 {
         if let Ok(output) = std::process::Command::new("nproc").output() {
-            if let Ok(cores) = String::from_utf8(output.stdout).ok() {
+            if let Some(cores) = String::from_utf8(output.stdout).ok() {
                 if let Ok(c) = cores.trim().parse::<u32>() {
                     cpu_cores = c;
                     cpu_threads = c;
@@ -189,8 +190,8 @@ fn detect_gpu() -> (String, String, u64, bool, bool) {
         }
     }
 
-    has_vaapi = check_vaapi();
-    has_gles32 = check_gles32();
+    has_vaapi = detect_vaapi();
+    has_gles32 = detect_gles32();
 
     (gpu_vendor, gpu_model, gpu_vram_mb, has_vaapi, has_gles32)
 }
@@ -256,17 +257,21 @@ fn parse_gpu_info(line: &str) -> Option<(String, String)> {
         } else {
             "Unknown"
         };
-        (vendor.to_string(), desc.to_string())
+        Some((vendor.to_string(), desc.to_string()))
     } else {
         None
     }
 }
 
+mod dbus;
+
+use tokio;
+
 fn main() {
     println!("Lume OS - lume-detect v0.1.0");
     println!("========================================");
 
-    let detect = HardwareInfo::new();
+    let detect = HardwareInfo::detect();
     let tier = detect.classify_tier();
 
     println!();
@@ -278,13 +283,13 @@ fn main() {
     println!("  RAM: {} MB", detect.ram_mb);
     println!("  GPU: {} {}", detect.gpu_vendor, detect.gpu_model);
     println!("  VRAM GPU: {} MB", detect.gpu_vram_mb);
-    println!("  VA-API: {}", if detect.vaapi { "sim" } else { "não" });
-    println!("  GLES 3.2: {}", if detect.gles32 { "sim" } else { "não" });
+    println!("  VA-API: {}", if detect.has_vaapi { "sim" } else { "não" });
+    println!("  GLES 3.2: {}", if detect.has_gles32 { "sim" } else { "não" });
     println!("  VM: {}", if detect.is_vm { "sim" } else { "não" });
     println!("  Virtio: {}", if detect.is_virtio { "sim" } else { "não" });
     println!();
     println!("=== Classificação de Tier ===");
-    println!("  Tier detectado: {} ({})", tier.tier_name(), tier as u8);
+    println!("  Tier detectado: {} ({})", detect.tier_name(), tier.clone() as u8);
     println!("  Justificativa:");
     match tier {
         HardwareTier::Prime => println!("    - RAM >= 4 GB e GLES 3.2 e VA-API presentes"),
@@ -300,5 +305,23 @@ fn main() {
         eprintln!("Aviso: não foi possível salvar detecção: {}", e);
     }
 
+    // Criar diretório se não existir e tentar novamente
+    if let Err(_) = fs::write("/var/lib/lume/detect.json", serde_json::to_string_pretty(&detect).unwrap()) {
+        if let Ok(()) = fs::create_dir_all("/var/lib/lume") {
+            let _ = fs::write("/var/lib/lume/detect.json", serde_json::to_string_pretty(&detect).unwrap());
+        }
+    }
+
     println!("\nDetecção concluída com sucesso!");
+
+    // Iniciar serviço D-Bus
+    tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(async {
+            if let Err(e) = dbus::run_dbus_service().await {
+                eprintln!("Erro no serviço D-Bus: {}", e);
+            }
+        });
 }

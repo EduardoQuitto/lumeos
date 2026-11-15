@@ -1,8 +1,12 @@
+mod dbus;
+
 use chrono::Utc;
 use rusqlite::{Connection, params};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::fs;
 use std::path::Path;
+use tokio;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ArquivoInfo {
@@ -81,7 +85,7 @@ impl FilesD {
                         arquivos.push(ArquivoInfo {
                             caminho: caminho.to_string_lossy().to_string(),
                             tamanho: metadata.len(),
-                            sha256: Self::calcular_sha256(&caminho),
+                            hash_sha256: Self::calcular_sha256(&caminho),
                             ultimo_acesso: Utc::now().to_rfc3339(),
                             ultima_modificacao: Utc::now().to_rfc3339(),
                             tipo: "arquivo".to_string(),
@@ -165,7 +169,7 @@ impl FilesD {
                         arquivos.push(ArquivoInfo {
                             caminho: caminho.to_string_lossy().to_string(),
                             tamanho: metadata.len(),
-                            sha256: Self::calcular_sha256(&caminho),
+                            hash_sha256: Self::calcular_sha256(&caminho),
                             ultimo_acesso: Utc::now().to_rfc3339(),
                             ultima_modificacao: Utc::now().to_rfc3339(),
                             tipo: "arquivo".to_string(),
@@ -206,12 +210,14 @@ impl FilesD {
                     "Excluir" => OperacaoArquivo::Excluir,
                     "Montar" => OperacaoArquivo::Montar,
                     "Desmontar" => OperacaoArquivo::Desmontar,
-                    "Extração" => OperacaoArquivo::Extração,
+                    "Extrair" => OperacaoArquivo::Extrair,
                     _ => OperacaoArquivo::Ler,
                 },
                 caminho: r.get(1)?,
-                tarefa: r.get(2)?,
-                payload: serde_json::json!({ "usuario": r.get::<_, String>(3)?, "sucesso": r.get::<_, bool>(4)?, "mensagem": r.get::<_, String>(5)? }),
+                timestamp: r.get(2)?,
+                usuario: r.get(3)?,
+                sucesso: r.get(4)?,
+                mensagem: r.get(5)?,
             })
         })?;
 
@@ -246,4 +252,12 @@ fn main() {
     }
 
     println!("\nServiço filesd iniciado com sucesso!");
+
+    // Iniciar serviço D-Bus
+    if let Ok(rt) = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+    {
+        let _ = rt.block_on(dbus::run_dbus_service());
+    }
 }

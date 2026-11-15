@@ -76,7 +76,7 @@ try {
     $state = Invoke-RestMethod -Uri "http://localhost:7777/api/state" -TimeoutSec 5 -ErrorAction Stop
     $f28 = $state.fases | Where-Object { $_.id -eq 28 }
     if ($f28) {
-        if ($f28.gate.blockers -eq 0) { Pass("Gate fase 28 GREEN: blockers = 0") } else { Fail("Gate fase 28: blockers = " + $f24.gate.blockers) }
+        if ($f28.gate.blockers -eq 0) { Pass("Gate fase 28 GREEN: blockers = 0") } else { Fail("Gate fase 28: blockers = " + $f28.gate.blockers) }
     } else {
         Fail("Fase 28 não encontrada no state")
     }

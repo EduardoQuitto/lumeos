@@ -1,0 +1,20 @@
+[workspace]
+members = [
+  "services/detect",
+  "services/updated",
+  "services/shield",
+  "services/filesd",
+  "services/stored",
+  "services/cli",
+  "services/performance",
+  "mission-control/backend",
+]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = 2

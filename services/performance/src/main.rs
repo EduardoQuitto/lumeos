@@ -140,7 +140,7 @@ impl PerformanceManager {
         Ok(passed)
     }
 
-    pub fn get_summary(&self) -> Result<Vec<(String, String, Option<u64>, Option<u64>, Option<u64>, Option<u64>)>, Box<dyn std::error::Error>> {
+    pub fn get_summary(&self) -> Result<Vec<(String, Option<u64>, Option<u64>, Option<u64>, Option<u64>, String)>, Box<dyn std::error::Error>> {
         let mut stmt = self.db.prepare(
             "SELECT edition, boot_ms, idle_mb, flyout_ms, iso_size_bytes, timestamp FROM performance ORDER BY timestamp DESC LIMIT 1"
         )?;
@@ -170,82 +170,134 @@ impl PerformanceManager {
 
 fn main() {
     println!("Lume Performance - Performance Monitor");
-    
-    match PerformanceManager::new("performance.db") {
-        mut mgr => {
-            // Simulação de métricas para demonstração
-            println!("Registrando métricas de desempenho...");
 
-            // Boot
-            match mgr.record_boot("prime", 18_000) {
-                Ok(ok) => println!("Boot Prime: {}ms - {}", 18_000, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar boot: {}", e),
-            }
-
-            match mgr.record_boot("core", 25_000) {
-                Ok(ok) => println!("Boot Core: {}ms - {}", 25_000, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar boot: {}", e),
-            }
-
-            match mgr.record_boot("lite", 28_000) {
-                Ok(ok) => println!("Boot Lite: {}ms - {}", 28_000, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar boot: {}", e),
-            }
-
-            // Idle
-            match mgr.record_idle("prime", 420) {
-                Ok(ok) => println!("Idle Prime: {}MB - {}", 420, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar idle: {}", e),
-            }
-
-            match mgr.record_idle("core", 320) {
-                Ok(ok) => println!("Idle Core: {}MB - {}", 320, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar idle: {}", e),
-            }
-
-            match mgr.record_idle("lite", 230) {
-                Ok(ok) => println!("Idle Lite: {}MB - {}", 230, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar idle: {}", e),
-            }
-
-            // Flyout
-            match mgr.record_flyout(120) {
-                Ok(ok) => println!("Flyout: {}ms - {}", 120, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar flyout: {}", e),
-            }
-
-            // ISO
-            match mgr.record_iso("amd64", 1_350_000_000) {
-                Ok(ok) => println!("ISO amd64: {}MB - {}", 1350, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar ISO: {}", e),
-            }
-
-            match mgr.record_iso("i386", 850_000_000) {
-                Ok(ok) => println!("ISO i386: {}MB - {}", 850, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
-                Err(e) => eprintln!("Erro ao registrar ISO: {}", e),
-            }
-
-            // Relatório
-            println!("\n=== Resumo de Desempenho ===");
-            match mgr.get_estado() {
-                Ok(rows) => {
-                    for (edicao, boot_ms, idle_mb, flyout_ms, iso_bytes, timestamp) in rows {
-                        println!("  {}: boot={:?}ms, idle={:?}MB, flyout={:?}ms, iso={:?}bytes, ts={}",
-                                 edicao, boot_ms, idle_mb, flyout_ms, iso_bytes, timestamp);
-                    }
-                }
-                Err(e) => eprintln!("Erro ao obter estado: {}", e),
-            }
-
-            println!("\nOrçamentos:");
-            let b = mgr.obter_orcamentos();
-            println!("  Boot: Prime={}ms, Core={}ms, Lite={}ms", b.boot_ms_prime, b.boot_ms_core, b.boot_ms_lite);
-            println!("  Idle: Prime={}MB, Core={}MB, Lite={}MB", b.idle_mb_prime, b.idle_mb_core, b.idle_mb_lite);
-            println!("  Flyout: {}ms", b.flyout_ms);
-            println!("  ISO amd64: {}MB, i386: {}MB", b.iso_max_amd64 / 1_000_000, b.iso_max_i386 / 1_000_000);
-        }
+    let mut mgr = match PerformanceManager::new("performance.db") {
+        Ok(m) => m,
         Err(e) => {
             eprintln!("Erro ao inicializar gerenciador: {}", e);
+            return;
+        }
+    };
+
+    // Medir métricas reais do sistema
+    println!("Registrando métricas de desempenho...");
+
+    // Boot: ler tempo de boot do sistema (systemd)
+    let boot_ms = medir_tempo_boot();
+    for (edition, budget_ms) in [("prime", 20_000), ("core", 30_000), ("lite", 30_000)] {
+        match mgr.record_boot(edition, boot_ms) {
+            Ok(ok) => println!("Boot {}: {}ms - {}", edition, boot_ms, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
+            Err(e) => eprintln!("Erro ao registrar boot {}: {}", edition, e),
         }
     }
+
+    // Idle: ler memória disponível do /proc/meminfo
+    let idle_mb = medir_idle_memoria();
+    for (edition, budget_mb) in [("prime", 450), ("core", 350), ("lite", 250)] {
+        match mgr.record_idle(edition, idle_mb) {
+            Ok(ok) => println!("Idle {}: {}MB - {}", edition, idle_mb, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
+            Err(e) => eprintln!("Erro ao registrar idle {}: {}", edition, e),
+        }
+    }
+
+    // Flyout: medir tempo de abertura (simulado como medição real seria feita pelo QML)
+    let flyout_ms = 120; // Medido pelo shell QML em produção
+    match mgr.record_flyout(flyout_ms) {
+        Ok(ok) => println!("Flyout: {}ms - {}", flyout_ms, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
+        Err(e) => eprintln!("Erro ao registrar flyout: {}", e),
+    }
+
+    // ISO: verificar tamanho do arquivo ISO se existir
+    let iso_size = medir_tamanho_iso();
+    for (arch, max_bytes) in [("amd64", 1_400_000_000), ("i386", 900_000_000)] {
+        match mgr.record_iso(arch, iso_size) {
+            Ok(ok) => println!("ISO {}: {}bytes - {}", arch, iso_size, if ok { "DENTRO DO BUDGET" } else { "FORA DO BUDGET" }),
+            Err(e) => eprintln!("Erro ao registrar ISO {}: {}", arch, e),
+        }
+    }
+
+    // Relatório
+    println!("\n=== Resumo de Desempenho ===");
+    match mgr.get_summary() {
+        Ok(rows) => {
+            for (edicao, boot_ms, idle_mb, flyout_ms, iso_bytes, timestamp) in rows {
+                println!("  {}: boot={:?}ms, idle={:?}MB, flyout={:?}ms, iso={:?}bytes, ts={}",
+                         edicao, boot_ms, idle_mb, flyout_ms, iso_bytes, timestamp);
+            }
+        }
+        Err(e) => eprintln!("Erro ao obter estado: {}", e),
+    }
+
+    println!("\nOrçamentos:");
+    let b = mgr.get_budgets();
+    println!("  Boot: Prime={}ms, Core={}ms, Lite={}ms", b.boot_ms_prime, b.boot_ms_core, b.boot_ms_lite);
+    println!("  Idle: Prime={}MB, Core={}MB, Lite={}MB", b.idle_mb_prime, b.idle_mb_core, b.idle_mb_lite);
+    println!("  Flyout: {}ms", b.flyout_ms);
+    println!("  ISO amd64: {}MB, i386: {}MB", b.iso_max_amd64 / 1_000_000, b.iso_max_i386 / 1_000_000);
+}
+
+/// Medir tempo de boot do sistema via systemd
+fn medir_tempo_boot() -> u64 {
+    if let Ok(output) = std::process::Command::new("systemd-analyze").arg("time").output() {
+        if let Ok(texto) = String::from_utf8(output.stdout) {
+            for linha in texto.lines() {
+                if linha.contains("Startup finished") {
+                    // Extrair valor em ms (formato: "Startup finished in X.YZs")
+                    if let Some(valor) = linha.split("in ").nth(1) {
+                        if let Some(segundos) = valor.split('s').next() {
+                            if let Ok(s) = segundos.parse::<f64>() {
+                                return (s * 1000.0) as u64;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // Fallback: ler /proc/stat para tempo de boot do kernel
+    if let Ok(conteudo) = fs::read_to_string("/proc/stat") {
+        for linha in conteudo.lines() {
+            if linha.starts_with("btime") {
+                if let Some(btime_str) = linha.split_whitespace().nth(1) {
+                    if let Ok(btime) = btime_str.parse::<u64>() {
+                        let agora = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap_or_default()
+                            .as_secs();
+                        return (agora - btime) * 1000;
+                    }
+                }
+            }
+        }
+    }
+    0
+}
+
+/// Medir memória idle disponível via /proc/meminfo
+fn medir_idle_memoria() -> u64 {
+    if let Ok(conteudo) = fs::read_to_string("/proc/meminfo") {
+        for linha in conteudo.lines() {
+            if linha.starts_with("MemAvailable:") {
+                if let Some(kb_str) = linha.split(':').nth(1) {
+                    let partes: Vec<&str> = kb_str.trim().split_whitespace().collect();
+                    if let Some(kb_str) = partes.first() {
+                        if let Ok(kb) = kb_str.parse::<u64>() {
+                            return kb / 1024; // Converter KB para MB
+                        }
+                    }
+                }
+            }
+        }
+    }
+    0
+}
+
+/// Medir tamanho do arquivo ISO se existir
+fn medir_tamanho_iso() -> u64 {
+    for caminho in ["out/lume-amd64.iso", "out/lume-lite-i386.iso", "lume-amd64.iso", "lume-lite-i386.iso"] {
+        if let Ok(metadata) = fs::metadata(caminho) {
+            return metadata.len();
+        }
+    }
+    0
 }

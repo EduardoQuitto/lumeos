@@ -18,35 +18,35 @@ Item {
 
         switch (layout) {
             case "esquerda":
-                janelaLume.largura = w / 2
-                janelaLume.altura = h
-                janelaLume.x = 0
-                janelaLume.y = 0
+                janelaAtual.largura = w / 2
+                janelaAtual.altura = h
+                janelaAtual.x = 0
+                janelaAtual.y = 0
                 break
             case "direita":
-                janelaLume.largura = w / 2
-                janelaLume.altura = h
-                janelaLume.x = w / 2
-                janelaLume.y = 0
+                janelaAtual.largura = w / 2
+                janelaAtual.altura = h
+                janelaAtual.x = w / 2
+                janelaAtual.y = 0
                 break
             case "canto-superior-esquerdo":
-                janelaLume.largura = w / 2
-                janelaLume.altura = h / 2
-                janelaLume.x = 0
-                janelaLume.y = 0
+                janelaAtual.largura = w / 2
+                janelaAtual.altura = h / 2
+                janelaAtual.x = 0
+                janelaAtual.y = 0
                 break
             case "canto-superior-direito":
-                janelaLume.largura = w / 2
-                janelaLume.altura = h / 2
-                janelaLume.x = w / 2
-                janelaLume.y = 0
+                janelaAtual.largura = w / 2
+                janelaAtual.altura = h / 2
+                janelaAtual.x = w / 2
+                janelaAtual.y = 0
                 break
             case "maximizar":
-                janelaLume.largura = w
-                janelaLume.altura = h
-                janelaLume.x = 0
-                janelaLume.y = 0
-                janelaLume.maximized = true
+                janelaAtual.largura = w
+                janelaAtual.altura = h
+                janelaAtual.x = 0
+                janelaAtual.y = 0
+                janelaAtual.maximized = true
                 break
         }
 
@@ -69,9 +69,9 @@ Item {
             aplicarSnap("maximizar")
             event.accepted = true
         } else if (event.key === Qt.Key_Down && event.modifiers === Qt.SuperModifier) {
-            janelaLume.maximized = false
-            janelaLume.largura = 800
-            janelaLume.altura = 600
+            janelaAtual.maximized = false
+            janelaAtual.largura = 800
+            janelaAtual.altura = 600
             event.accepted = true
         }
     }

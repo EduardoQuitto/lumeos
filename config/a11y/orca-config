@@ -1,40 +1,18 @@
-# Lume OS - Orca Screen Reader Configuration
-# Requisitos fase 24:
-#   - Orca screen reader configurado e pronto para uso
+# Lume OS — Acessibilidade: Orca Screen Reader
+# Configuração para deficientes visuais
 
 [orca]
 enabled = true
-language = pt-BR
 voice_rate = 50
 voice_pitch = 50
 voice_volume = 100
-
-[braille]
-enabled = false
-table = english-us
-
-[echo]
-character = false
-word = true
-sentence = true
-
-[focus_tracking]
-enabled = true
-follow_focus = true
-
-[visual]
-high_contrast = false
-font_size = large
+punctuation_level = some
+echo_keys = true
+echo_mouse = true
+echo_typing = true
 
 [keyboard]
-echo_keys = true
-echo_modifiers = true
-
-[mouse]
-tracking = false
-follow_mouse = false
-
-[announcements]
-focus_change = true
-mouse_over = false
-live_region = true
+sticky_keys = true
+slow_keys = false
+bounce_keys = false
+mouse_keys = false

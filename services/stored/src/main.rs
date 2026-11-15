@@ -1,9 +1,12 @@
+mod dbus;
+
 use chrono::Utc;
 use rusqlite::{Connection, params};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fs;
 use std::path::Path;
+use tokio;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct SlotInfo {
@@ -108,7 +111,7 @@ impl Stored {
     pub fn verificar_integridade_slot(&mut self, slot: &str) -> Result<bool, Box<dyn std::error::Error>> {
         // Verificar se o slot está íntegro (verity)
         // Em produção, verificar hash do slot
-        let slot_ativo = self.obter_slot_ativo()?;
+        let slot_ativo = Stored::obter_slot_ativo(&self.db)?;
         if slot == &slot_ativo {
             return Ok(true);
         }
@@ -123,9 +126,9 @@ impl Stored {
         Ok(50_000_000_000) // 50 GB simulado
     }
 
-    pub fn obter_espaco_usado(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    pub fn obter_espaco_usado(&mut self) -> Result<u64, Box<dyn std::error::Error>> {
         // Calcular espaço usado baseado nos slots
-        let mut slots = self.listar_slots()?;
+        let slots = self.listar_slots()?;
         let mut total = 0u64;
         for slot in &slots {
             // Estimar tamanho baseado na versão
@@ -134,33 +137,12 @@ impl Stored {
         Ok(total)
     }
 
-    pub fn obter_espaco_livre(&self) -> Result<u64, Box<dyn std::error::Error>> {
-        let total = self.obter_espaco_disponível()?;
+    pub fn obter_espaco_livre(&mut self) -> Result<u64, Box<dyn std::error::Error>> {
+        let total = self.obter_espaco_disponivel()?;
         let usado = self.obter_espaco_usado()?;
         Ok(total.saturating_sub(usado))
     }
 
-    pub fn listar_slots(&mut self) -> Result<Vec<SlotInfo>, Box<dyn std::error::Error>> {
-        let mut stmt = self.db.prepare(
-            "SELECT name, status, versao, sha256, boot_count, health_check_passed FROM slots"
-        )?;
-        let rows = stmt.query_map([], |r| {
-            Ok(SlotInfo {
-                nome: r.get(0)?,
-                status: r.get(1)?,
-                versao: r.get(2)?,
-                sha256: r.get(3)?,
-                boot_count: r.get(4)?,
-                health_check_passed: r.get::<_, i32>(5)? == 1,
-            })
-        })?;
-
-        let mut slots = Vec::new();
-        for row in rows {
-            slots.push(row?);
-        }
-        Ok(slots)
-    }
 }
 
 fn main() {
@@ -188,7 +170,7 @@ fn main() {
     }
 
     // Obter estatísticas de armazenamento
-    match armazenamento.obter_espaco_disponível() {
+    match armazenamento.obter_espaco_disponivel() {
         Ok(total) => println!("Espaço total: {} bytes ({} GB)", total, total / (1024 * 1024 * 1024)),
         Err(e) => eprintln!("Erro ao obter espaço total: {}", e),
     }
@@ -204,4 +186,12 @@ fn main() {
     }
 
     println!("\nArmazenamento Lume OS inicializado com sucesso!");
+
+    // Iniciar serviço D-Bus
+    if let Ok(rt) = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+    {
+        let _ = rt.block_on(dbus::run_dbus_service());
+    }
 }
